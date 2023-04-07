@@ -36,7 +36,8 @@
                             height="{{ config('adminlte.auth_logo.img.height') }}"
                          @endif>
                 @else
-                    <img class="d-block mx-auto user-select-none img-fluid" src="{{ asset(config('adminlte.logo_img')) }}"
+                    <img title="{{ config('adminlte.description') }}" class="d-block mx-auto user-select-none img-fluid"
+                         src="{{ asset(config('adminlte.logo_img')) }}"
                          alt="{{ config('adminlte.logo_img_alt') }}" width="200">
                 @endif
 
@@ -68,7 +69,6 @@
             @endif
 
         </div>
-
     </div>
 @stop
 
