@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('selection_processes', function (Blueprint $table) {
+        Schema::create('selective_processes', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->year('ano')->unique();
             $table->boolean('estado');

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 40);
             $table->string('email', 150)->unique();
-            $table->enum('role', ['administrador', 'monitor']);
+            $table->enum('type', ['administrador', 'monitor']);
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 62);
+            $table->string('password', 70);
             $table->rememberToken();
             $table->timestamps();
         });

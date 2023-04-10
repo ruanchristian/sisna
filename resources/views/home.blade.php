@@ -1,16 +1,68 @@
 @extends('adminlte::page')
 
+@section('title', 'Painel - ')
+
 @section('content_header')
-    <h1 class="m-0 text-dark">PAINEL</h1>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Painel</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <span class="breadcrumb-item">Bem vindo(a): <b>{{ Auth::user()->name }}</b></span>
+                </ol>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <p class="mb-0">OLÁ:  <b> {{ Auth::user()->name }} </b></p>
-                    
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ $users->count() }}</h3>
+                        <p>Usuários</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ $processes->count() }}</h3>
+                        <p>Processos seletivos</p>
+                    </div>
+                    <div class="icon">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $courses->count() }}</h3>
+                        <p>Cursos</p>
+                    </div>
+                    <div class="icon">
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ $admin_count }}</h3>
+                        <p>Admins</p>
+                    </div>
+                    <div class="icon">
+                       
+                    </div>
                 </div>
             </div>
         </div>

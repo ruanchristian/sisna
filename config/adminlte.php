@@ -15,7 +15,6 @@ return [
     */
 
     'title' => '',
-    'title_prefix' => '',
     'title_postfix' => 'SISNA',
     'description' => 'Sistema Interno de Seleção dos Novos Alunos',
 
@@ -243,7 +242,7 @@ return [
         [
             'text' => 'Painel',
             'icon' => 'fas fa-home',
-            'url' => 'home/'
+            'url' => 'home'
         ],
 
         ['header' => 'Gerenciar usuários'],
@@ -252,13 +251,15 @@ return [
             'icon' => 'fas fa-users',
             'submenu' => [
                 [
-                    'text' => 'Usuários',
+                    'text' => 'Ver usuários',
+                    'icon' => 'fas fa-eye',
                     'url' => 'users'
                 ],
                 [
                     'text' => 'Cadastrar novo usuário',
+                    'icon' => 'fas fa-user-plus',
                     'url' => 'users/create',
-                   // 'can' => 'isAdministrator'
+                    'can' => 'isAdmin'
                 ]
             ],
         ]
@@ -304,17 +305,17 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
             ],
