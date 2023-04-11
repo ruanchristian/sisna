@@ -23,15 +23,21 @@ class StoreUpdateUserRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules(): array {
-        return [
+        $id = $this->id ?? '';
+
+        $rules = [
             'name' => 'required|string|max:40|min:3',
-            'email' => 'required|email|unique:users',
+            'email' => "required|email|unique:users,email,$id,id",
             'password' => 'required|min:6|confirmed',
             'type' => [
                 'required',
                 Rule::in(['administrador', 'monitor'])
             ]
         ];
+
+        if ($this->isMethod("PUT")) $rules['password'] = 'nullable|min:6';
+        
+        return $rules;
     }
 
     public function messages(): array {

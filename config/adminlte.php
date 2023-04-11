@@ -248,7 +248,7 @@ return [
         ['header' => 'Gerenciar usuários'],
         [
             'text' => 'Usuários',
-            'icon' => 'fas fa-users',
+            'icon' => 'fas fa-users-gear',
             'submenu' => [
                 [
                     'text' => 'Ver usuários',

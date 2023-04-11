@@ -39,7 +39,7 @@
                         <p>Processos seletivos</p>
                     </div>
                     <div class="icon">
-                        
+                        <i class="fas fa-arrows-down-to-people"></i>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                         <p>Cursos</p>
                     </div>
                     <div class="icon">
-                       
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
                 </div>
             </div>
@@ -61,10 +61,14 @@
                         <p>Admins</p>
                     </div>
                     <div class="icon">
-                       
+                       <i class="fas fa-code"></i>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row mt-5">
+            <h5>Implementar novas coisas aqui...</h5>
         </div>
     </div>
 @stop

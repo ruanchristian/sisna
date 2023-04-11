@@ -11,7 +11,7 @@
 @section('content')
 
     @if (session()->has('message'))
-        <x-adminlte-alert theme="success" title="Feito">
+        <x-adminlte-alert theme="success" title="Feito" dismissable>
             {{ session('message') }}
         </x-adminlte-alert>
     @endif
@@ -29,7 +29,7 @@
                 <div class="form-group">
                     <label for="text">Nome</label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                        id="name" placeholder="Nome completo..." value="{{ old('name') }}">
+                        id="name" placeholder="Nome completo..." required value={{ old('name') }}>
 
                     @error('name')
                         <span class="invalid-feedback" role="alert">
@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        id="email" placeholder="Email" {{ old('email') }}>
+                        id="email" placeholder="Email" required value={{ old('email') }}>
 
                     @error('email')
                         <span class="invalid-feedback" role="alert">
