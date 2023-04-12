@@ -33,10 +33,10 @@
                         <tr>
                             <th>Índice</th>
                             <th>Nome</th>
-                            <th>Email</th>
-                            <th>Cargo</th>
+                            <th class="no-orderable">Email</th>
+                            <th class="no-orderable">Cargo</th>
                             @can('isAdmin', Auth::user())
-                                <th>Ações</th>
+                                <th class="no-orderable">Ações</th>
                             @endcan
                         </tr>
                     </thead>

@@ -7,7 +7,7 @@ $(document).ready(() => {
             lengthMenu: "Exibir _MENU_ usuários por página"
         },
         columnDefs: [
-            {orderable: false, targets: [2, 3, 4]}
+            {orderable: false, targets: 'no-orderable'}
         ],
     });
 })
