@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller {
 
@@ -25,7 +24,7 @@ class UserController extends Controller {
         
         User::create($user);
         
-        return back()->with('message', 'Usuário: '.$user['name'].' foi criado com sucesso!');
+        return back()->with('message', 'Usuário: <b>'.$user['name'].'</b> foi criado com sucesso!');
     }
 
     public function update(StoreUpdateUserRequest $request, int $id) {
@@ -39,7 +38,7 @@ class UserController extends Controller {
         }
         $user->update($data);
 
-        return redirect()->route('user.index')->with('success', 'Usuário '.$request->name.' foi editado com sucesso!');
+        return redirect()->route('user.index')->with('success', 'Usuário: <b>'.$request->name.'</b> foi editado com sucesso!');
     }
 
     public function destroy(int $id) {
@@ -48,7 +47,7 @@ class UserController extends Controller {
         }
         $user->destroy($id);
 
-        return redirect()->route('user.index')->with('success', 'Usuário '.$user->name.' excluído com sucesso!');
+        return redirect()->route('user.index')->with('success', 'Usuário: <b>'.$user->name.'</b> excluído com sucesso!');
     }
 
     public function getUserById(int $id) {

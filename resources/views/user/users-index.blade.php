@@ -16,9 +16,13 @@
     @endif
 
     @if (session()->has('success'))
-        <x-adminlte-alert theme="success" title="Feito" dismissable>
-            {{ session('success') }}
-        </x-adminlte-alert>
+        <script>
+            Swal.fire(
+             'Feito!',
+             `{!! session('success') !!}`,
+             'success'
+            );
+        </script>  
     @endif
 
     <div class="container-fluid">
@@ -117,7 +121,7 @@
             </x-adminlte-input>
 
             <x-slot name="footerSlot">
-                <x-adminlte-button type="submit" theme="info" label="Salvar dados" />
+                <x-adminlte-button icon="fas fa-floppy-disk" type="submit" theme="primary" label="Salvar dados" />
             </x-slot>
         </x-adminlte-modal>
     </form>

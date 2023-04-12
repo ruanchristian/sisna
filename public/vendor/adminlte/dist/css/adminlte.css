@@ -2580,15 +2580,13 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
-  box-shadow: none;
+  background-color: #3c6cac;
+  transition: background-color .1.5s ease-in-out;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #376092;
 }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -26649,7 +26647,7 @@ body.text-sm .input-group-text {
 }
 
 .card-primary:not(.card-outline) > .card-header {
-  background-color: #007bff;
+  background-color: #3c6cac;
 }
 
 .card-primary:not(.card-outline) > .card-header,

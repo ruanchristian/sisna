@@ -11,11 +11,14 @@
 @section('content')
 
     @if (session()->has('message'))
-        <x-adminlte-alert theme="success" title="Feito" dismissable>
-            {{ session('message') }}
-        </x-adminlte-alert>
+    <script>
+        Swal.fire(
+         'Cadastro concluído!',
+         `{!! session('message') !!}`,
+         'success'
+        );
+    </script>
     @endif
-
 
     <div class="card card-primary">
         <div class="card-header">

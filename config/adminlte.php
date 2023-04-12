@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'logo' => '<b>'.env('APP_NAME').'</b>',
+    'logo' => '<b>SISNA</b>',
     'logo_img' => 'vendor/adminlte/dist/img/sisna-logo.png',
     'logo_img_class' => 'brand-image img-circle',
     'logo_img_xl' => null,
@@ -124,11 +124,11 @@ return [
     */
 
     'classes_auth_card' => 'card-primary',
-    'classes_auth_header' => 'bg-gradient-primary',
+    'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary bg-gradient',
+    'classes_auth_btn' => 'btn-primary bg-gradient',
 
     /*
     |--------------------------------------------------------------------------
