@@ -245,7 +245,29 @@ return [
             'url' => 'home'
         ],
 
-        ['header' => 'Gerenciar usuários'],
+        [
+            'header' => 'Gerenciamento de Cursos',
+            'can' => 'isAdmin'
+        ],
+        [
+            'text' => 'Cursos',
+            'icon' => 'fas fa-graduation-cap',
+            'can' => 'isAdmin',
+            'submenu' => [
+                [
+                    'text' => 'Cadastrar cursos',
+                    'icon' => 'fas fa-plus',
+                    'url' => 'courses/create'
+                ],
+                [
+                    'text' => 'Editar cursos',
+                    'icon' => 'fas fa-pen',
+                    'url' => 'courses/edit'
+                ]
+            ]
+        ],
+
+        ['header' => 'Gerenciamento de usuários'],
         [
             'text' => 'Usuários',
             'icon' => 'fas fa-users-gear',
@@ -262,7 +284,7 @@ return [
                     'can' => 'isAdmin'
                 ]
             ],
-        ]
+        ],
     ],
 
     /*

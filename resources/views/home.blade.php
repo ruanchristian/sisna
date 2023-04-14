@@ -67,8 +67,18 @@
             </div>
         </div>
 
-        <div class="row mt-5">
-            <h5>Implementar novas coisas aqui...</h5>
-        </div>
+
+        {{-- <div class="row mt-5">
+           <div class="col-lg-3 col-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header text-center">
+                    <h2>Gráficos</h2>
+                </div>
+                <div class="card-body">
+
+                </div>
+           </div>
+            </div> 
+        </div> --}}
     </div>
 @stop
