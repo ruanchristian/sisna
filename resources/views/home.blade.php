@@ -24,18 +24,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $users->count() }}</h3>
-                        <p>Usuários</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{ $processes->count() }}</h3>
+                        <h3>{{ $processes_count }}</h3>
                         <p>Processos seletivos</p>
                     </div>
                     <div class="icon">
@@ -44,10 +33,10 @@
                 </div>
             </div>
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-warning">
+                <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ $courses->count() }}</h3>
-                        <p>Cursos</p>
+                        <h3>{{ $courses_count }}</h3>
+                        <p>Cursos EEEPJAS</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-graduation-cap"></i>
@@ -55,30 +44,100 @@
                 </div>
             </div>
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger">
+                <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $admin_count }}</h3>
-                        <p>Admins</p>
+                        <h3>2</h3>
+                        <p>...</p>
                     </div>
                     <div class="icon">
-                       <i class="fas fa-code"></i>
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>0</h3>
+                        <p>.,,.</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-code"></i>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <x-adminlte-card title="Gráfico 1" theme="primary" icon="fas fa-lg fa-chart-pie">
+                    <canvas height="300px" id="grafico1"></canvas>
+                </x-adminlte-card>
+            </div>
 
-        {{-- <div class="row mt-5">
-           <div class="col-lg-3 col-6">
-            <div class="card card-outline card-primary">
-                <div class="card-header text-center">
-                    <h2>Gráficos</h2>
-                </div>
-                <div class="card-body">
-
-                </div>
-           </div>
-            </div> 
-        </div> --}}
+            <div class="col-md-6">
+                <x-adminlte-card title="Gráfico 2" theme="primary" icon="fas fa-lg fa-chart-simple">
+                    <canvas height="300px" id="grafico2"></canvas>
+                </x-adminlte-card>
+            </div>
+        </div>
     </div>
 @stop
+
+@push('js')
+    <script>
+        $(function() {
+            let donutChartCanvas = $('#grafico1').get(0).getContext('2d')
+            let donutData = {
+                labels: [
+                    'Informática',
+                    'Edificações',
+                    'Logística',
+                    'Nutrição & Dietética',
+                    'Administração',
+                    'Agronegócios',
+                ],
+                datasets: [{
+                    label: 'Nº de alunos',
+                    data: [700, 500, 400, 600, 300, 100],
+                }]
+            }
+            let donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            })
+
+            // --------------- 
+
+            let canvas = $('#grafico2').get(0).getContext('2d')
+            let canvasData = {
+                labels: [
+                    'Informática',
+                    'Edificações',
+                    'Logística',
+                    'Nutrição & Dietética',
+                    'Administração',
+                    'Agronegócios',
+                ],
+                datasets: [{
+                    label: 'Nº De alunos inscritos',
+                    data: [700, 500, 400, 600, 300, 100],
+                }]
+            }
+            let canvasOpt = {
+                maintainAspectRatio: false,
+                responsive: true,
+                datasetFill: false
+            }
+            new Chart(canvas, {
+                type: 'bar',
+                data: canvasData,
+                options: canvasOpt
+            })
+        })
+    </script>
+@endpush

@@ -47,7 +47,7 @@ class UserController extends Controller {
         }
         $user->destroy($id);
 
-        return redirect()->route('user.index')->with('success', 'Usuário: <b>'.$user->name.'</b> excluído com sucesso!');
+        return redirect()->route('user.index');
     }
 
     public function getUserById(int $id) {

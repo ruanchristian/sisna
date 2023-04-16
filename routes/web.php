@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Course\CourseController;
+use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -7,6 +9,26 @@ Auth::routes(['register' => FALSE]);
 
 Route::get('/', function () {
     return view('auth.login');
+});
+
+Route::controller(SelectiveProcessController::class)->middleware('auth')->prefix('processes')->group(function () {
+    Route::name('process.')->group(function () {
+      Route::get('/', 'index')->name('index');
+
+        Route::middleware('can:isAdmin,App\Models\User')->group(function () {
+            Route::post('/create', 'store')->name('store');
+        });
+    });
+});
+
+Route::controller(CourseController::class)->middleware('auth')->prefix('courses')->group(function () {
+    Route::name('course.')->group(function () {
+      Route::get('/', 'index')->name('index');
+
+        Route::middleware('can:isAdmin,App\Models\User')->group(function () {
+            
+        });
+    });
 });
 
 Route::controller(UserController::class)->middleware('auth')->prefix('users')->group(function () {

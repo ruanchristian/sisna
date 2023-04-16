@@ -14,10 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->unsignedInteger('id', true);
             $table->string('nome', 25);
-            $table->boolean('estado');
-            $table->primary('id');
             $table->timestamps();
         });
     }

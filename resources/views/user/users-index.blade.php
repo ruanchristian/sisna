@@ -9,22 +9,6 @@
 @stop
 
 @section('content')
-    @if (session()->has('error_msg'))
-        <x-adminlte-alert theme="danger" title="Erro" dismissable>
-            {{ session('error_msg') }}
-        </x-adminlte-alert>
-    @endif
-
-    @if (session()->has('success'))
-        <script>
-            Swal.fire(
-             'Feito!',
-             `{!! session('success') !!}`,
-             'success'
-            );
-        </script>  
-    @endif
-
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
@@ -54,21 +38,16 @@
                                             value="{{ $user->id }}">
                                             <i class="fas fa-lg fa-fw fa-pen"></i>
                                         </button>
-                                        <form class="d-inline-block" action="{{ route('user.destroy', $user->id) }}" method="POST">
-                                            @method('DELETE')
-                                            @csrf
-
-                                            @if ($user->id === Auth::user()->id)
-                                                <button disabled class="btn btn-xs btn-default text-danger mx-1 shadow">
-                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
-                                                </button>
-                                            @else
-                                                <button class="btn btn-xs btn-default text-danger mx-1 shadow"
-                                                    title="Deletar {{ $user->name }}">
-                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
-                                                </button>
-                                            @endif
-                                        </form>
+                                        @if ($user->id === Auth::user()->id)
+                                            <button disabled class="btn btn-xs btn-default text-danger mx-1 shadow">
+                                                <i class="fas fa-lg fa-fw fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-xs btn-default text-danger mx-1 shadow delete-user"
+                                                title="Deletar {{ $user->name }}" value="{{ $user->id }}">
+                                                <i class="fas fa-lg fa-fw fa-trash"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 @endcan
                             </tr>
@@ -80,7 +59,7 @@
     </div>
 
     {{-- Modal de Edição --}}
-    <form id="form-update" role="form" action="{{ route('user.update', 0) }}" method="POST">
+    <form id="form-update" role="form" action="{{ route('user.update', rand(1, 100)) }}" method="POST">
         @method('PUT')
         @csrf
         <x-adminlte-modal id="modalEdit" title="Editar usuário" icon="fas fa-user-pen" static-backdrop scrollable>
@@ -129,6 +108,36 @@
 
 @push('js')
     <script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/datatables.min.js"></script>
-    <script src="{{ asset('js/datatable.js') }}"></script>
     <script src="{{ asset('js/users-management.js') }}"></script>
+
+    <script>
+        $(() => {
+            $('#users-table').DataTable({
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json',
+                    searchPlaceholder: "Buscar usuário...",
+                    info: "Mostrando de _START_ até _END_ de _TOTAL_ usuários",
+                    lengthMenu: "Exibir _MENU_ usuários por página"
+                },
+                columnDefs: [{orderable: false, targets: 'no-orderable'}],
+            });
+        });
+    </script>
+
+    @if (session()->has('error_msg'))
+        <x-adminlte-alert theme="danger" title="Erro" dismissable>
+            {{ session('error_msg') }}
+        </x-adminlte-alert>
+    @endif
+
+    @if (session()->has('success'))
+        <script>
+            Swal.fire(
+                'Feito!',
+                `{!! session('success') !!}`,
+                'success'
+            );
+        </script>
+    @endif
 @endpush
