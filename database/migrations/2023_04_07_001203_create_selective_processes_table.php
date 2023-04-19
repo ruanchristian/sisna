@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('selective_processes', function (Blueprint $table) {
             $table->unsignedInteger('id', true);
             $table->year('ano')->unique();
-            $table->boolean('estado')->default(0);
+            $table->boolean('estado')->default(false);
             $table->string('cursos', 25)->nullable();
             $table->timestamps();
         });
