@@ -43,7 +43,12 @@ $(document).on('click', '.delete-user', function() {
                     "id": id,
                 }
             }).done(() => {
-                Swal.fire('Exclusão feita!', 'Esse usuário foi excluído com sucesso.', 'success').then(() => {
+                Swal.fire({
+                    title: 'Exclusão feita!', 
+                    text: 'Esse usuário foi excluído com sucesso.',
+                    icon: 'success',
+                    confirmButtonColor: '#3c6cac'
+                }).then(() => {
                     location.reload();
                 })
             }).fail(() => {

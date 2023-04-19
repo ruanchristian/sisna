@@ -103,11 +103,12 @@
 
     @if (session()->has('message'))
         <script>
-            Swal.fire(
-                'Cadastro concluído!',
-                `{!! session('message') !!}`,
-                'success'
-            );
+            Swal.fire({
+                title: 'Cadastro concluído!',
+                html: `{!! session('message') !!}`,
+                icon: 'success',
+                confirmButtonColor: '#3c6cac'
+            });
         </script>
     @endif
 @endpush

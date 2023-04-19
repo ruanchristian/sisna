@@ -133,11 +133,12 @@
 
     @if (session()->has('success'))
         <script>
-            Swal.fire(
-                'Feito!',
-                `{!! session('success') !!}`,
-                'success'
-            );
+            Swal.fire({
+                title: 'Feito!',
+                html: `{!! session('success') !!}`,
+                icon: 'success',
+                confirmButtonColor: '#3c6cac'
+            });
         </script>
     @endif
 @endpush

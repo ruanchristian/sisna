@@ -17,6 +17,7 @@ Route::controller(SelectiveProcessController::class)->middleware('auth')->prefix
 
         Route::middleware('can:isAdmin,App\Models\User')->group(function () {
             Route::post('/create', 'store')->name('store');
+            Route::put('/change-state/{id}', 'updateState')->name('update-state');
         });
     });
 });

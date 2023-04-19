@@ -19,26 +19,19 @@
                     <form action="{{ route('process.store') }}" method="POST">
                         @csrf
                         <x-adminlte-input type="number" min="{{ date('Y') + 1 }}" name="ano"
-                            label="Ano do processo seletivo:" placeholder="Informe o ano do processo a ser criado...">
+                            label="Ano do processo seletivo:" placeholder="Informe o ano do processo a ser criado..."
+                            required>
                             <x-slot name="prependSlot">
                                 <div class="input-group-text">
-                                    <i class="fas fa-calendar-days"></i>
+                                    <i class="fas fa-calendar-day"></i>
                                 </div>
                             </x-slot>
                         </x-adminlte-input>
 
                         {{-- Select para os cursos --}}
 
-                        @php
-                            $configs = [
-                                'placeholder' => 'Selecione 4 cursos...',
-                                'allowClear' => true,
-                                'maximumSelectionLength' => 4
-                            ];
-                        @endphp
-
-                        <x-adminlte-select2 id="cursos-select" :config="$configs" name="cursos[]"
-                            label="Escolha os cursos a serem ofertados:" multiple>
+                        <x-adminlte-select2 data-maximum-selection-length="4" data-placeholder="Selecione 4 cursos..."
+                            id="cursos-select" name="cursos[]" label="Escolha os cursos a serem ofertados:" multiple>
                             <x-slot name="prependSlot">
                                 <div class="input-group-text">
                                     <i class="fas fa-graduation-cap"></i>
@@ -57,45 +50,50 @@
 
             <div class="col-md mb-3">
                 <x-adminlte-card title="Processos seletivos" theme="primary" icon="fas fa-file-pen">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Ano</th>
-                                <th>Situação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($processos as $processo)
+
+                    @if (!$processos->count())
+                        <b class="text-danger">Não existem processos seletivos cadastrados no sistema.</b>
+                    @else
+                        <table class="table table-bordered table-hover">
+                            <thead>
                                 <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ $processo->ano }}</td>
-                                    <td>
-                                        @if ($processo->estado == 1)
-                                            <div
-                                                class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                <input type="checkbox" class="custom-control-input"
-                                                    onchange="changeState(this, `{{ $processo->ano }}`)" name="estado"
-                                                    id="{{ $processo->id }}" value="{{ $processo->id }}" checked>
-                                                <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                    for="{{ $processo->id }}">Aberto</label>
-                                            </div>
-                                        @else
-                                            <div
-                                                class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                <input type="checkbox" class="custom-control-input"
-                                                    onchange="changeState(this, `{{ $processo->ano }}`)" name="estado"
-                                                    id="{{ $processo->id }}" value="{{ $processo->id }}">
-                                                <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                    for="{{ $processo->id }}"
-                                                    title="Reabrir processo seletivo">Fechado</label>
-                                            </div>
-                                        @endif
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Ano</th>
+                                    <th>Situação</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($processos as $processo)
+                                    <tr>
+                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $processo->ano }}</td>
+                                        <td>
+                                            @if ($processo->estado == 1)
+                                                <div
+                                                    class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        onchange="changeState(this, `{{ $processo->ano }}`)"
+                                                        id="{{ $processo->id }}" value="{{ $processo->id }}" checked>
+                                                    <label id="{{ $processo->ano }}" class="custom-control-label"
+                                                        for="{{ $processo->id }}">Aberto</label>
+                                                </div>
+                                            @else
+                                                <div
+                                                    class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        onchange="changeState(this, `{{ $processo->ano }}`)"
+                                                        id="{{ $processo->id }}" value="{{ $processo->id }}">
+                                                    <label id="{{ $processo->ano }}" class="custom-control-label"
+                                                        for="{{ $processo->id }}"
+                                                        title="Reabrir processo seletivo">Fechado</label>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
                 </x-adminlte-card>
             </div>
         </div>

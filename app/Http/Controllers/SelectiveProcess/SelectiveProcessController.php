@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcessRequest;
 use App\Models\Course;
 use App\Models\SelectiveProcess;
+use Illuminate\Http\Request;
 
 class SelectiveProcessController extends Controller {
     
@@ -17,8 +18,24 @@ class SelectiveProcessController extends Controller {
     }
 
     public function store(StoreProcessRequest $request) {
-        SelectiveProcess::create($request->all());
+        if (!is_countable($request->cursos) || count($request->cursos) != 4) {
+            return back()->withErrors(['cursos' => "O processo seletivo precisa oferecer 4 cursos."]);
+        }
+        $processo = $request->all();
+        $processo['cursos'] = implode('-', $request->cursos);
 
-        return redirect()->back();
+        SelectiveProcess::create($processo);
+
+        return back();
+    }
+
+    public function updateState(Request $request, int $id) {
+        if (!$process = SelectiveProcess::find($id)) {
+            return response()->json(null, 404);
+        }
+        $process->update($request->only('estado'));
+        return response()->json([
+            'ok' => 'Processo alterado para: <b>'. (($request->estado == 1) ? 'ABERTO' : 'FECHADO' . '</b>')
+        ]);
     }
 }
