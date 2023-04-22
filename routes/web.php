@@ -3,6 +3,8 @@
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\User\UserController;
+use App\Models\Course;
+use App\Models\SelectiveProcess;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => FALSE]);
@@ -13,7 +15,7 @@ Route::get('/', function () {
 
 Route::controller(SelectiveProcessController::class)->middleware('auth')->prefix('processes')->group(function () {
     Route::name('process.')->group(function () {
-      Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
 
         Route::middleware('can:isAdmin,App\Models\User')->group(function () {
             Route::post('/create', 'store')->name('store');
@@ -24,17 +26,16 @@ Route::controller(SelectiveProcessController::class)->middleware('auth')->prefix
 
 Route::controller(CourseController::class)->middleware('auth')->prefix('courses')->group(function () {
     Route::name('course.')->group(function () {
-      Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
 
         Route::middleware('can:isAdmin,App\Models\User')->group(function () {
-            
         });
     });
 });
 
 Route::controller(UserController::class)->middleware('auth')->prefix('users')->group(function () {
     Route::name('user.')->group(function () {
-      Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
 
         Route::middleware('can:isAdmin,App\Models\User')->group(function () {
             Route::get('/create', 'create')->name('create');
@@ -46,7 +47,41 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
     });
 });
 
+// Algoritmo de seleção
+Route::get('rsa/{id}', function ($id) {
+    $process = SelectiveProcess::findOrFail(1);
+    // $courses = explode('-', $process->cursos);
+
+    $students = $process->students()
+        ->where('curso_id', $id)
+        ->orderByDesc('media_final')
+        ->orderBy('data_nascimento')
+        ->orderByDesc('media_pt')
+        ->orderByDesc('media_mt')->get();
+
+    $origens = [
+        'PCD' => 2,
+        'PUBLICA-AMPLA' => 25,
+        'PUBLICA-PROX-EEEP' => 10,
+        'PRIVATE-AMPLA' => 6,
+        'PRIVATE-PROX-EEEP' => 2,
+    ];
+
+    $top_students = collect();
+
+    foreach ($origens as $origem => $vagas) {
+        $students_origem = $students->where('origem', $origem)->take($vagas);
+        $top_students = $top_students->concat($students_origem);
+    }
+
+    if (45-count($top_students) > 0) {
+        // curso possui menos de 45 estudantes
+    }
+
+    echo '<pre>';
+    print_r($top_students->toArray());
+});
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
-

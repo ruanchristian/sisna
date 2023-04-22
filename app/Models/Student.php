@@ -18,4 +18,12 @@ class Student extends Model {
         'media_mt',
         'media_final'
     ];
+
+    public function process() {
+        return $this->belongsTo(SelectiveProcess::class, 'processo_id');
+    }
+
+    public function course() {
+        return $this->belongsTo(Course::class, 'curso_id');
+    }
 }

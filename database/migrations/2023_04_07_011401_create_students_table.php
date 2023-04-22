@@ -23,8 +23,8 @@ return new class extends Migration
             $table->unsignedFloat('media_mt');
             $table->unsignedFloat('media_final');
             $table->enum('origem', ['PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP', 'PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP', 'PCD']);
-            $table->foreign('curso_id')->references('id')->on('courses')->onDelete('cascade');
-            $table->foreign('processo_id')->references('id')->on('selective_processes')->onDelete('cascade');
+            $table->foreign('curso_id')->references('id')->on('courses');
+            $table->foreign('processo_id')->references('id')->on('selective_processes');
             $table->timestamps();
         });
     }

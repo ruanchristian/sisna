@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class SelectiveProcess extends Model {
     use HasFactory;
 
-    protected $fillable = [
-        'ano',
-        'estado',
-        'cursos'
-    ];
+    public $timestamps = false;
+
+    protected $fillable = ['ano', 'estado', 'cursos'];
+
+    public function students() {
+        return $this->hasMany(Student::class, 'processo_id');
+    }
 }
