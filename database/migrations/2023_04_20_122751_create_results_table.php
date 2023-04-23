@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students');
             $table->unsignedInteger('course_id');
             $table->boolean('is_classified')->default(false);
-            $table->string('origin', 20);
+            $table->enum('origin', ['PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP', 'PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP', 'PCD']);
 
             $table->foreign('course_id')->references('id')->on('courses');
         });

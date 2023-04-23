@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('id', true);
             $table->year('ano')->unique();
             $table->boolean('estado')->default(false);
-            $table->string('cursos', 11)->nullable();
+            $table->string('cursos', 11);
         });
     }
 

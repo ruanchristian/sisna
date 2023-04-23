@@ -3,7 +3,6 @@
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\User\UserController;
-use App\Models\Course;
 use App\Models\SelectiveProcess;
 use Illuminate\Support\Facades\Route;
 
@@ -48,12 +47,11 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
 });
 
 // Algoritmo de seleção
-Route::get('rsa/{id}', function ($id) {
+Route::get('rsa/{courseId}', function ($courseId) {
     $process = SelectiveProcess::findOrFail(1);
     // $courses = explode('-', $process->cursos);
 
-    $students = $process->students()
-        ->where('curso_id', $id)
+    $students = $process->students()->where('curso_id', $courseId)
         ->orderByDesc('media_final')
         ->orderBy('data_nascimento')
         ->orderByDesc('media_pt')
@@ -67,19 +65,16 @@ Route::get('rsa/{id}', function ($id) {
         'PRIVATE-PROX-EEEP' => 2,
     ];
 
-    $top_students = collect();
+    $topStudents = collect($origens)->flatMap(function ($vagas, $origem) use ($students) {
+        return $students->where('origem', $origem)->take($vagas);
+    });
 
-    foreach ($origens as $origem => $vagas) {
-        $students_origem = $students->where('origem', $origem)->take($vagas);
-        $top_students = $top_students->concat($students_origem);
-    }
+    $allClassifiableStudents = $students->diff($topStudents);
+    $publicClassifiable = $allClassifiableStudents->whereIn('origem', ['PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP']);
+    $privateClassifiable = $allClassifiableStudents->whereIn('origem', ['PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP']);
 
-    if (45-count($top_students) > 0) {
-        // curso possui menos de 45 estudantes
-    }
-
-    echo '<pre>';
-    print_r($top_students->toArray());
+    // Resultado
+    SelectiveProcessController::showResult($topStudents, $origens);
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

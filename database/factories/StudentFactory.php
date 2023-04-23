@@ -21,7 +21,7 @@ class StudentFactory extends Factory
         $media_mt = mt_rand(2*10, 10*10) / 10;
 
         return [
-            'nome' => fake()->name(),
+            'nome' => strtoupper(fake()->name()),
             'data_nascimento' => $this->randomDate('2005-01-01', '2005-12-31'),
             'curso_id' => rand(1, 4),
             'processo_id' => 1,

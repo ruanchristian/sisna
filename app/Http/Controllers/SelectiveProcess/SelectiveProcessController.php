@@ -8,16 +8,19 @@ use App\Models\Course;
 use App\Models\SelectiveProcess;
 use Illuminate\Http\Request;
 
-class SelectiveProcessController extends Controller {
-    
-    public function index() {
+class SelectiveProcessController extends Controller
+{
+
+    public function index()
+    {
         $processos = SelectiveProcess::orderBy('ano', 'DESC')->get();
         $cursos = Course::all();
 
         return view('process.process-index', compact('processos', 'cursos'));
     }
 
-    public function store(StoreProcessRequest $request) {
+    public function store(StoreProcessRequest $request)
+    {
         if (!is_countable($request->cursos) || count($request->cursos) != 4) {
             return back()->withErrors(['cursos' => "O processo seletivo precisa oferecer 4 cursos."]);
         }
@@ -29,13 +32,23 @@ class SelectiveProcessController extends Controller {
         return back();
     }
 
-    public function updateState(Request $request, int $id) {
+    public function updateState(Request $request, int $id)
+    {
         if (!$process = SelectiveProcess::find($id)) {
             return response()->json(null, 404);
         }
         $process->update($request->only('estado'));
         return response()->json([
-            'ok' => 'Processo alterado para: <b>'. (($request->estado == 1) ? 'ABERTO' : 'FECHADO' . '</b>')
+            'ok' => 'Processo alterado para: <b>' . (($request->estado == 1) ? 'ABERTO' : 'FECHADO' . '</b>')
         ]);
+    }
+
+    // Função de teste
+    public static function showResult($bestStudents, $origins): void {
+        foreach ($origins as $origem => $vagas) {
+            $students = $bestStudents->where('origem', $origem);
+
+            echo view('alunos.index', compact('students', 'origem'));
+        }
     }
 }
