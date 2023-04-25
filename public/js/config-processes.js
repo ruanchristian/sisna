@@ -4,9 +4,9 @@ const changeState = (checkbox, p) => {
     update(checkbox.value, checkbox.checked);
 
     if (checkbox.checked) {
-        state.innerText = "Aberto";
+        state.innerText = "Em andamento";
     } else {
-        state.innerText = "Fechado";
+        state.innerText = "Encerrado";
     }
 };
 

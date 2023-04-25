@@ -75,7 +75,7 @@
                                                         onchange="changeState(this, `{{ $processo->ano }}`)"
                                                         id="{{ $processo->id }}" value="{{ $processo->id }}" checked>
                                                     <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                        for="{{ $processo->id }}">Aberto</label>
+                                                        for="{{ $processo->id }}">Em andamento</label>
                                                 </div>
                                             @else
                                                 <div
@@ -85,7 +85,7 @@
                                                         id="{{ $processo->id }}" value="{{ $processo->id }}">
                                                     <label id="{{ $processo->ano }}" class="custom-control-label"
                                                         for="{{ $processo->id }}"
-                                                        title="Reabrir processo seletivo">Fechado</label>
+                                                        title="Reabrir processo seletivo">Encerrado</label>
                                                 </div>
                                             @endif
                                         </td>

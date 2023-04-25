@@ -39,7 +39,7 @@ class SelectiveProcessController extends Controller
         }
         $process->update($request->only('estado'));
         return response()->json([
-            'ok' => 'Processo alterado para: <b>' . (($request->estado == 1) ? 'ABERTO' : 'FECHADO' . '</b>')
+            'ok' => 'Processo alterado para: <b>' . (($request->estado == 1) ? 'EM ANDAMENTO' : 'ENCERRADO' . '</b>')
         ]);
     }
 
