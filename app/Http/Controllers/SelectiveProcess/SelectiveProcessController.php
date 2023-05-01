@@ -13,7 +13,7 @@ class SelectiveProcessController extends Controller
 
     public function index()
     {
-        $processos = SelectiveProcess::orderBy('ano', 'DESC')->get();
+        $processos = SelectiveProcess::orderByDesc('ano')->get();
         $cursos = Course::all();
 
         return view('process.process-index', compact('processos', 'cursos'));

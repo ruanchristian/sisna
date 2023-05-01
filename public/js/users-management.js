@@ -3,7 +3,11 @@ const URL = $(location).attr('href');
 // Montando modal do user com AJAX
 $(document).on('click', '.edit-user', function(){
     const USER_ID = $(this).val();
+    const MY_ID = $(this).data("current");
+
     let formUrl = $('#form-update').attr('action');
+
+    MY_ID == USER_ID ? $('#type-user').attr("disabled", "disabled") : $('#type-user').removeAttr("disabled")
 
     $.get(URL + '/request/' + USER_ID, function(data) {
         $('#name-user').val(data.name);

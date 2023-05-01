@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 class UserController extends Controller {
 
     public function index() {
@@ -42,8 +42,8 @@ class UserController extends Controller {
     }
 
     public function destroy(int $id) {
-        if (!$user = User::find($id)) {
-            return redirect()->route('user.index');
+        if (!$user = User::find($id) or Auth::user()->id === $id) {
+            return response()->json(null, 404);
         }
         $user->destroy($id);
 

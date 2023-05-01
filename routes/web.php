@@ -12,23 +12,20 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::controller(SelectiveProcessController::class)->middleware('auth')->prefix('processes')->group(function () {
+Route::controller(SelectiveProcessController::class)->middleware('can:isAdmin, App\Models\User')->prefix('processes')->group(function () {
     Route::name('process.')->group(function () {
         Route::get('/', 'index')->name('index');
-
-        Route::middleware('can:isAdmin,App\Models\User')->group(function () {
-            Route::post('/create', 'store')->name('store');
-            Route::put('/change-state/{id}', 'updateState')->name('update-state');
-        });
+        Route::post('/create', 'store')->name('store');
+        Route::put('/change-state/{id}', 'updateState')->name('update-state');
     });
 });
 
-Route::controller(CourseController::class)->middleware('auth')->prefix('courses')->group(function () {
+Route::controller(CourseController::class)->middleware('can:isAdmin, App\Models\User')->prefix('courses')->group(function () {
     Route::name('course.')->group(function () {
         Route::get('/', 'index')->name('index');
-
-        Route::middleware('can:isAdmin,App\Models\User')->group(function () {
-        });
+        Route::get('/request-course/{id}', 'getCourse');
+        Route::post('/create-course', 'store')->name('store');
+        Route::put('/edit-course/{id}', 'update')->name('update');
     });
 });
 

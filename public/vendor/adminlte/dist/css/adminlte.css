@@ -23354,8 +23354,13 @@ body.text-sm .input-group-text {
 }
 
 .custom-control-input-success:checked ~ .custom-control-label::before {
-  border-color: #28a745;
-  background-color: #28a745;
+  border-color: #008000;
+  background-color: #008000;
+}
+
+.custom-control-input-roxo:checked ~ .custom-control-label::before {
+  border-color: #9400d3;
+  background-color: #9400d3;
 }
 
 .custom-control-input-success.custom-control-input-outline:checked[type="checkbox"] ~ .custom-control-label::after {

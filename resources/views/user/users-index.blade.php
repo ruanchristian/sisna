@@ -12,48 +12,50 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
-                <table class="table table-bordered table-hover collapsed" id="users-table">
-                    <thead>
-                        <tr>
-                            <th>Índice</th>
-                            <th>Nome</th>
-                            <th class="no-orderable">Email</th>
-                            <th class="no-orderable">Cargo</th>
-                            @can('isAdmin', Auth::user())
-                                <th class="no-orderable">Ações</th>
-                            @endcan
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover collapsed" id="users-table">
+                        <thead>
                             <tr>
-                                <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ ucfirst($user->type) }}</td>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th class="no-orderable">Email</th>
+                                <th class="no-orderable">Cargo</th>
                                 @can('isAdmin', Auth::user())
-                                    <td>
-                                        <button title="Editar {{ $user->name }}"
-                                            class="btn btn-xs btn-default text-primary mx-1 shadow edit-user"
-                                            value="{{ $user->id }}">
-                                            <i class="fas fa-lg fa-fw fa-pen"></i>
-                                        </button>
-                                        @if ($user->id === Auth::user()->id)
-                                            <button disabled class="btn btn-xs btn-default text-danger mx-1 shadow">
-                                                <i class="fas fa-lg fa-fw fa-trash"></i>
-                                            </button>
-                                        @else
-                                            <button class="btn btn-xs btn-default text-danger mx-1 shadow delete-user"
-                                                title="Deletar {{ $user->name }}" value="{{ $user->id }}">
-                                                <i class="fas fa-lg fa-fw fa-trash"></i>
-                                            </button>
-                                        @endif
-                                    </td>
+                                    <th class="no-orderable">Ações</th>
                                 @endcan
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ ucfirst($user->type) }}</td>
+                                    @can('isAdmin', Auth::user())
+                                        <td>
+                                            <button title="Editar {{ $user->name }}" data-current="{{ Auth::user()->id }}"
+                                                class="btn btn-xs btn-default text-primary mx-1 shadow edit-user"
+                                                value="{{ $user->id }}">
+                                                <i class="fas fa-lg fa-fw fa-pen"></i>
+                                            </button>
+                                            @if ($user->id === Auth::user()->id)
+                                                <button disabled class="btn btn-xs btn-default text-danger mx-1 shadow">
+                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-xs btn-default text-danger mx-1 shadow delete-user"
+                                                    title="Deletar {{ $user->name }}" value="{{ $user->id }}">
+                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
+                                                </button>
+                                            @endif
+                                        </td>
+                                    @endcan
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -120,7 +122,10 @@
                     info: "Mostrando de _START_ até _END_ de _TOTAL_ usuários",
                     lengthMenu: "Exibir _MENU_ usuários por página"
                 },
-                columnDefs: [{orderable: false, targets: 'no-orderable'}],
+                columnDefs: [{
+                    orderable: false,
+                    targets: 'no-orderable'
+                }],
             });
         });
     </script>

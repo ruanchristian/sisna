@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->unsignedInteger('id', true);
             $table->string('nome', 20)->unique();
-            $table->string('cor_curso', 7);
+            $table->string('cor_curso', 7)->unique();
         });
     }
 

@@ -6,7 +6,7 @@
 
 @section('content_header')
     <div class="container-fluid">
-        <h1 class="mb-0">Criar/editar processos seletivos</h1>
+        <h1 class="mb-0">Criar/visualizar processos seletivos</h1>
     </div>
 @stop
 
@@ -31,7 +31,8 @@
                         {{-- Select para os cursos --}}
 
                         <x-adminlte-select2 data-maximum-selection-length="4" data-placeholder="Selecione 4 cursos..."
-                            id="cursos-select" name="cursos[]" label="Escolha os cursos a serem ofertados:" multiple>
+                            id="cursos-select" name="cursos[]" label="Escolha os cursos a serem ofertados:" multiple
+                            required>
                             <x-slot name="prependSlot">
                                 <div class="input-group-text">
                                     <i class="fas fa-graduation-cap"></i>
@@ -84,8 +85,7 @@
                                                         onchange="changeState(this, `{{ $processo->ano }}`)"
                                                         id="{{ $processo->id }}" value="{{ $processo->id }}">
                                                     <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                        for="{{ $processo->id }}"
-                                                        title="Reabrir processo seletivo">Encerrado</label>
+                                                        for="{{ $processo->id }}">Encerrado</label>
                                                 </div>
                                             @endif
                                         </td>

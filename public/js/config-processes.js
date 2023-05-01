@@ -3,22 +3,18 @@ const changeState = (checkbox, p) => {
 
     update(checkbox.value, checkbox.checked);
 
-    if (checkbox.checked) {
-        state.innerText = "Em andamento";
-    } else {
-        state.innerText = "Encerrado";
-    }
+    checkbox.checked ? state.innerText = "Em andamento" : state.innerText = "Encerrado"
 };
 
-function update(id, state) {
+function update(id, stateValue) {
     $.ajax({
         url: $(location).attr("href") + "/change-state/" + id,
         type: "POST",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
             _method: "PUT",
-            estado: state ? 1 : 0,
-        },
+            estado: stateValue ? 1 : 0,
+        }
     }).done((msg) => {
          Swal.fire({
              title: 'Processo alterado!',
