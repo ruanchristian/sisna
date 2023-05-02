@@ -257,7 +257,7 @@ return [
                 [
                     'text' => 'Cadastrar novos alunos',
                     'icon' => 'fas fa-school',
-                    'url' => '/'
+                    'url' => 'students'
                 ],
                 [
                     //
@@ -280,6 +280,16 @@ return [
             'icon' => 'fas fa-graduation-cap',
             'can' => 'isAdmin',
             'url' => 'courses'
+        ],
+
+        [
+            'header' => 'Critérios de seleção',
+            'can' => 'isAdmin'
+        ],
+        [
+            'text' => 'Configurar critérios',
+            'icon' => 'fas fa-gears',
+            'url' => 'special-configs'
         ],
 
         ['header' => 'Gerenciamento de usuários'],
