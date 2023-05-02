@@ -23437,8 +23437,13 @@ body.text-sm .input-group-text {
 }
 
 .custom-control-input-danger:checked ~ .custom-control-label::before {
-  border-color: #dc3545;
-  background-color: #dc3545;
+  border-color: #ff0000;
+  background-color: #ff0000;
+}
+
+.custom-control-input-marrom:checked ~ .custom-control-label::before {
+  border-color: #964b00;
+  background-color: #964b00;
 }
 
 .custom-control-input-danger.custom-control-input-outline:checked[type="checkbox"] ~ .custom-control-label::after {

@@ -30,17 +30,23 @@
                     <div class="icon">
                         <i class="fas fa-arrows-down-to-people"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="{{ route('process.index') }}" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{ $courses_count }}</h3>
-                        <p>Cursos EEEPJAS</p>
+                        <p>Cursos</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="{{ route('course.index') }}" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">

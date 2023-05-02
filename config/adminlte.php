@@ -246,6 +246,26 @@ return [
         ],
 
         [
+            'header' => 'Controle de Novos Alunos',
+            'can' => 'isAdmin'
+        ],
+        [
+            'text' => 'Alunos',
+            'can' => 'isAdmin',
+            'icon' => 'fas fa-user-graduate',
+            'submenu' => [
+                [
+                    'text' => 'Cadastrar novos alunos',
+                    'icon' => 'fas fa-school',
+                    'url' => '/'
+                ],
+                [
+                    //
+                ]
+            ]
+        ],
+
+        [
             'header' => 'Cursos e Processos Seletivos',
             'can' => 'isAdmin'
         ],

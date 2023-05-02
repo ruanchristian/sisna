@@ -36,7 +36,7 @@
                         <div class="custom-control custom-radio">
                             <input
                                 class="custom-control-input custom-control-input-danger @error('cor_curso') is-invalid @enderror"
-                                type="radio" id="vermelho" name="cor_curso" value="#dc3545">
+                                type="radio" id="vermelho" name="cor_curso" value="#ff0000">
                             <label for="vermelho" class="custom-control-label">Vermelho</label>
                         </div>
 
@@ -52,6 +52,13 @@
                                 class="custom-control-input custom-control-input-success @error('cor_curso') is-invalid @enderror"
                                 type="radio" id="verde" name="cor_curso" value="#008000">
                             <label for="verde" class="custom-control-label">Verde</label>
+                        </div>
+
+                        <div class="custom-control custom-radio">
+                            <input
+                                class="custom-control-input custom-control-input-marrom @error('cor_curso') is-invalid @enderror"
+                                type="radio" id="marrom" name="cor_curso" value="#964b00">
+                            <label for="marrom" class="custom-control-label">Marrom</label>
                         </div>
 
                         <div class="custom-control custom-radio">
@@ -82,7 +89,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Índice</th>
+                                    <th>ID</th>
                                     <th>Nome</th>
                                     <th>Ações</th>
                                 </tr>
