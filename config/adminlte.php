@@ -282,16 +282,6 @@ return [
             'url' => 'courses'
         ],
 
-        [
-            'header' => 'Critérios de seleção',
-            'can' => 'isAdmin'
-        ],
-        [
-            'text' => 'Configurar critérios',
-            'icon' => 'fas fa-gears',
-            'url' => 'special-configs'
-        ],
-
         ['header' => 'Gerenciamento de usuários'],
         [
             'text' => 'Usuários',

@@ -85,7 +85,7 @@
                     @if ($courses->isEmpty())
                         <b class="text-danger">Não existem processos seletivos cadastrados no sistema.</b>
                     @else
-                      <div class="table-responsive"> 
+                      <div style="max-height: 312px;" class="table-responsive"> 
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -97,7 +97,7 @@
                             <tbody>
                                 @foreach ($courses as $course)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <span
                                                 style="color: @if ($course->cor_curso == '#ffc107') #000; @else #FFF; @endif background-color: {{ $course->cor_curso }}"

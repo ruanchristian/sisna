@@ -6,6 +6,7 @@ use App\Http\Controllers\SpecialConfig\SpecialConfigController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\User\UserController;
 use App\Models\SelectiveProcess;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => FALSE]);
@@ -41,7 +42,8 @@ Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
 
     Route::controller(SpecialConfigController::class)->prefix('special-configs')->group(function () {
         Route::name('configs.')->group(function() {
-            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'index')->name('index');
+            Route::put('/save-order/{process}', 'update')->name('update');
         });     
     });
 });
