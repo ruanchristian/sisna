@@ -83,7 +83,7 @@
             <div class="col mb-3">
                 <x-adminlte-card title="Editar cursos" theme="primary" icon="fas fa-pen">
                     @if ($courses->isEmpty())
-                        <b class="text-danger">Não existem processos seletivos cadastrados no sistema.</b>
+                        <b class="text-danger">Não existem cursos cadastrados no sistema.</b>
                     @else
                       <div style="max-height: 312px;" class="table-responsive"> 
                         <table class="table table-bordered table-hover">
