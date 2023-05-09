@@ -257,7 +257,7 @@ return [
                 [
                     'text' => 'Cadastrar novos alunos',
                     'icon' => 'fas fa-school',
-                    'url' => '/'
+                    'url' => 'students'
                 ],
                 [
                     //

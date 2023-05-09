@@ -52,47 +52,44 @@
             <div class="col-md mb-3">
                 <x-adminlte-card title="Processos seletivos" theme="primary" icon="fas fa-file-pen">
 
-                    @if (!$processos->count())
+                    @if ($processos->isEmpty())
                         <b class="text-danger">Não existem processos seletivos cadastrados no sistema.</b>
                     @else
+                    <div style="max-height: 222px;" class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Ano</th>
                                     <th>Situação</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($processos as $processo)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $processo->ano }}</td>
                                         <td>
-                                            @if ($processo->estado == 1)
-                                                <div
-                                                    class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                        onchange="changeState(this, `{{ $processo->ano }}`)"
-                                                        id="{{ $processo->id }}" value="{{ $processo->id }}" checked>
-                                                    <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                        for="{{ $processo->id }}">Em andamento</label>
-                                                </div>
-                                            @else
-                                                <div
-                                                    class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                        onchange="changeState(this, `{{ $processo->ano }}`)"
-                                                        id="{{ $processo->id }}" value="{{ $processo->id }}">
-                                                    <label id="{{ $processo->ano }}" class="custom-control-label"
-                                                        for="{{ $processo->id }}">Encerrado</label>
-                                                </div>
-                                            @endif
+                                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                <input type="checkbox" class="custom-control-input" onchange="changeState(this, `{{ $processo->ano }}`)"
+                                                    id="{{ $processo->id }}" value="{{ $processo->id }}"
+                                                    {{ $processo->estado == 1 ? 'checked' : '' }}>
+                                                <label id="{{ $processo->ano }}" class="custom-control-label" for="{{ $processo->id }}">
+                                                    {{ $processo->estado == 1 ? 'Em andamento' : 'Encerrado' }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('configs.index', $processo->id) }}">
+                                                <x-adminlte-button label="Ajustar critérios" theme="info" icon="fas fa-gears" />
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
                     @endif
                 </x-adminlte-card>
             </div>
@@ -103,4 +100,15 @@
 @push('js')
     <script src="{{ asset('vendor/custom-input/custom-file-input.js') }}"></script>
     <script src="{{ asset('js/config-processes.js') }}"></script>
+
+    @if (session()->has('error_msg'))
+    <script>
+        Swal.fire({
+            title: 'ERRO!!',
+            text: `{{ session('error_msg') }}`,
+            icon: 'error',
+            confirmButtonColor: '#3c6cac'
+        });
+    </script>
+    @endif
 @endpush

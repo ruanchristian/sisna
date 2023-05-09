@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     Course,
-    SelectiveProcess
+    SelectiveProcess,
+    User
 };
 
 class HomeController extends Controller
@@ -25,9 +26,10 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index() {
-        $courses_count = Course::all()->count();
-        $processes_count = SelectiveProcess::all()->count();
+        $coursesCount = Course::all()->count();
+        $processesCount = SelectiveProcess::all()->count();
+        $adminsCount = User::where('type', 'administrador')->count();
 
-        return view('home', compact('courses_count', 'processes_count'));
+        return view('home', compact('coursesCount', 'processesCount', 'adminsCount'));
     }
 }
