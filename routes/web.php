@@ -3,7 +3,7 @@
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\SpecialConfig\SpecialConfigController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\User\UserController;
 use App\Models\SelectiveProcess;
 use Illuminate\Http\Request;
@@ -36,7 +36,8 @@ Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
     
     Route::controller(StudentController::class)->prefix('students')->group(function () {
         Route::name('student.')->group(function () {
-            Route::get('/', 'index');
+            Route::get('/create/{processId}', 'index')->name('index');
+            Route::post('/create-student/{process}', 'store')->name('create');
         });
     });
 

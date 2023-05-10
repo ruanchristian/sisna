@@ -38,9 +38,12 @@
                                     <i class="fas fa-graduation-cap"></i>
                                 </div>
                             </x-slot>
-                            @foreach ($cursos as $curso)
+                            @forelse ($cursos as $curso)
                                 <option value="{{ $curso->id }}">{{ $curso->nome }}</option>
-                            @endforeach
+
+                                @empty
+                                  <option>Não há cursos cadastrados. Cadastre os cursos</option>
+                            @endforelse
                         </x-adminlte-select2>
                         <x-slot name="footerSlot">
                             <x-adminlte-button class="d-flex ml-auto" type="submit" theme="primary" label="Criar" />
@@ -62,7 +65,8 @@
                                     <th>ID</th>
                                     <th>Ano</th>
                                     <th>Situação</th>
-                                    <th>Ações</th>
+                                    <th>Cadastrar</th>
+                                    <th>Configurações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,6 +83,11 @@
                                                     {{ $processo->estado == 1 ? 'Em andamento' : 'Encerrado' }}
                                                 </label>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('student.index', $processo->id) }}">
+                                                <x-adminlte-button label="Cadastrar participantes" theme="success" icon="fas fa-user-graduate" />
+                                            </a>
                                         </td>
                                         <td>
                                             <a href="{{ route('configs.index', $processo->id) }}">

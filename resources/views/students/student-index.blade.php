@@ -11,118 +11,46 @@
 @section('content')
 
     <div class="container-fluid">
-       
+
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Informe os dados abaixo</h3>
+                <h3 class="card-title">
+                    <i class="fas fa-user-graduate"></i>
+                    Insira os dados do participante
+                </h3>
             </div>
 
-            <form role="form" action="{{ route('user.store') }}" method="POST">
+            <form role="form" action="{{ route('student.create', $process->id) }}" method="POST">
                 @csrf
-
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="text">Nome</label>
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                            id="name" placeholder="Nome completo..." required value={{ old('name') }}>
+                    <x-adminlte-input label="Nome completo do participante" name="nome" type="text" placeholder="Nome completo..." value="{{ old('nome') }}" required />
 
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Grupo Pertencente</label>
+                    <x-adminlte-select name="origem" label="Grupo pertencente">
+                        <option value="PUBLICA-AMPLA">Pública Ampla Concorrência</option>
+                        <option value="PUBLICA-PROX-EEEP">Pública Residente Próximo</option>
+                        <option value="PRIVATE-AMPLA">Particular Ampla Concorrência</option>
+                        <option value="PRIVATE-PROX-EEEP">Particular Residente Próximo</option>
+                        <option value="PCD">PCD</option>
+                    </x-adminlte-select>
 
-                        <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
-                            <option value="">Pública Ampla Concorrência</option>
-                            <option value="">Pública Residente Próximo</option>
-                            <option value="">Particular Ampla Concorrência</option>
-                            <option value="">Particular Residente Próximo</option>
-                            <option value="">PCD</option>
-                        </select>
+                    <x-adminlte-input label="Data de Nascimento" name="data_nascimento" type="date" value="{{ old('data_nascimento') }}" required />
 
-                        @error('type')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="text">Data de Nascimento</label>
-                        <input type="date" name="data" class="form-control @error('name') is-invalid @enderror"
-                            id="name" placeholder="DD/MM/AAAA" required value={{ old('name') }}>
+                    <x-adminlte-select name="curso_id" label="Opção de curso">
+                        @foreach ($courses as $course)
+                            <option value="{{ $course->id }}">{{ $course->nome }}</option>    
+                        @endforeach
+                    </x-adminlte-select>
 
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Opção de Curso</label>
+                    <x-adminlte-input min="0" max="10" label="Média de Português" name="media_pt"
+                        type="number" step="0.01" value="{{ old('media_pt') }}" required />
+                    <x-adminlte-input min="0" max="10" label="Média de Matemática" name="media_mt"
+                        type="number" step="0.01" value="{{ old('media_mt') }}" required />
+                    <x-adminlte-input min="0" max="10" label="Média Final" name="media_final" type="number"
+                        step="0.01" value="{{ old('media_final') }}" required />
 
-                        <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
-                            <option value="">Administração</option>
-                            <option value="">Agronegócio</option>
-                            <option value="">Edificações</option>
-                            <option value="">Informática</option>
-                            <option value="">Nutrição e Dietética</option>
-                            <option value="">Logística</option>
-                        </select>
-
-                        @error('type')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="text">Nota de Português</label>
-                        <input type="number" name="NP" class="form-control @error('name') is-invalid @enderror"
-                            id="nota_pt" placeholder="0.00" required value={{ old('name') }}>
-
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="text">Nota de Matemática</label>
-                        <input type="number" name="NM" class="form-control @error('name') is-invalid @enderror"
-                            id="nota_mt" placeholder="0.00" required value={{ old('name') }}>
-
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="text">Média de Notas</label>
-                        <input type="number" name="media_Total" class="form-control @error('name') is-invalid @enderror"
-                            id="media_total" placeholder="0.00" required value={{ old('name') }}>
-
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="text">Processo Seletivo</label>
-                        <input type="number" name="ano" class="form-control @error('name') is-invalid @enderror"
-                            id="ano" min="{{ date('Y') + 1 }}" required value={{ old('name') }}>
-
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    
+                    <x-adminlte-select disabled name="processo_id" label="Processo seletivo">
+                        <option selected value="{{ $process->id }}">{{ $process->ano }}</option>
+                    </x-adminlte-select>
                 </div>
 
                 <div class="card-footer">
@@ -130,6 +58,5 @@
                 </div>
             </form>
         </div>
-
     </div>
 @stop

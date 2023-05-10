@@ -39,16 +39,10 @@
                                                 value="{{ $user->id }}">
                                                 <i class="fas fa-lg fa-fw fa-pen"></i>
                                             </button>
-                                            @if ($user->id === Auth::user()->id)
-                                                <button disabled class="btn btn-xs btn-default text-danger mx-1 shadow">
-                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
-                                                </button>
-                                            @else
-                                                <button class="btn btn-xs btn-default text-danger mx-1 shadow delete-user"
-                                                    title="Deletar {{ $user->name }}" value="{{ $user->id }}">
-                                                    <i class="fas fa-lg fa-fw fa-trash"></i>
-                                                </button>
-                                            @endif
+                                            
+                                            <button {{ $user->id === Auth::user()->id ? 'disabled' : '' }} class="btn btn-xs btn-default text-danger mx-1 shadow delete-user" value="{{ $user->id }}">
+                                                <i class="fas fa-lg fa-fw fa-trash"></i>
+                                            </button>
                                         </td>
                                     @endcan
                                 </tr>
