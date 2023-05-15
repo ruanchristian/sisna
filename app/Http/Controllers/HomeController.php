@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Models\SelectiveProcess;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\{
+    Course,
+    SelectiveProcess,
+    Student,
+    User
+};
 
 class HomeController extends Controller
 {
@@ -25,11 +27,11 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index() {
-        $users = User::all();
-        $courses = Course::all();
-        $processes = SelectiveProcess::all();
-        $admin_count = User::where('type', 'administrador')->count();
+        $coursesCount = Course::all()->count();
+        $processesCount = SelectiveProcess::all()->count();
+        $adminsCount = User::where('type', 'administrador')->count();
+        $studentsCount = Student::all()->count();
 
-        return view('home', compact('courses', 'users', 'processes', 'admin_count'));
+        return view('home', compact('coursesCount', 'processesCount', 'adminsCount', 'studentsCount'));
     }
 }

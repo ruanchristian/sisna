@@ -17,14 +17,14 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('nome', 50);
             $table->date('data_nascimento');
-            $table->unsignedInteger('curso');
-            $table->unsignedInteger('processo');
-            $table->unsignedDouble('media_pt');
-            $table->unsignedDouble('media_mt');
-            $table->unsignedDouble('media_final');
+            $table->unsignedInteger('curso_id');
+            $table->unsignedInteger('processo_id');
+            $table->unsignedFloat('media_pt');
+            $table->unsignedFloat('media_mt');
+            $table->unsignedFloat('media_final');
             $table->enum('origem', ['PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP', 'PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP', 'PCD']);
-            $table->foreign('curso')->references('id')->on('courses')->onDelete('cascade');
-            $table->foreign('processo')->references('id')->on('selective_processes')->onDelete('cascade');
+            $table->foreign('curso_id')->references('id')->on('courses');
+            $table->foreign('processo_id')->references('id')->on('selective_processes');
             $table->timestamps();
         });
     }

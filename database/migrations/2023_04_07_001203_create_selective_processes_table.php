@@ -14,12 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('selective_processes', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->unsignedInteger('id', true);
             $table->year('ano')->unique();
-            $table->boolean('estado');
-            $table->string('cursos', 25);
-            $table->primary('id');
-            $table->timestamps();
+            $table->boolean('estado')->default(false);
+            $table->string('cursos', 11);
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('selection_processes');
+        Schema::dropIfExists('selective_processes');
     }
 };

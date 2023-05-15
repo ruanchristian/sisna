@@ -11,11 +11,19 @@ class Student extends Model {
     protected $fillable = [
         'nome',
         'data_nascimento',
-        'curso',
-        'processo',
+        'curso_id',
+        'processo_id',
         'origem',
         'media_pt',
         'media_mt',
         'media_final'
     ];
+
+    public function process() {
+        return $this->belongsTo(SelectiveProcess::class, 'processo_id');
+    }
+
+    public function course() {
+        return $this->belongsTo(Course::class, 'curso_id');
+    }
 }

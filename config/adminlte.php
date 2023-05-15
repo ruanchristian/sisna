@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'logo' => '<b>'.env('APP_NAME').'</b>',
+    'logo' => '<b>SISNA</b>',
     'logo_img' => 'vendor/adminlte/dist/img/sisna-logo.png',
     'logo_img_class' => 'brand-image img-circle',
     'logo_img_xl' => null,
@@ -124,11 +124,11 @@ return [
     */
 
     'classes_auth_card' => 'card-primary',
-    'classes_auth_header' => 'bg-gradient-primary',
+    'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary bg-gradient',
+    'classes_auth_btn' => 'btn-primary bg-gradient',
 
     /*
     |--------------------------------------------------------------------------
@@ -245,7 +245,44 @@ return [
             'url' => 'home'
         ],
 
-        ['header' => 'Gerenciar usuários'],
+        [
+            'header' => 'Controle de Novos Alunos',
+            'can' => 'isAdmin'
+        ],
+        [
+            'text' => 'Alunos',
+            'can' => 'isAdmin',
+            'icon' => 'fas fa-user-graduate',
+            'submenu' => [
+                [
+                    'text' => 'Cadastrar novos alunos',
+                    'icon' => 'fas fa-school',
+                    'url' => 'students'
+                ],
+                [
+                    //
+                ]
+            ]
+        ],
+
+        [
+            'header' => 'Cursos e Processos Seletivos',
+            'can' => 'isAdmin'
+        ],
+        [
+            'text' => 'Cursos',
+            'icon' => 'fas fa-graduation-cap',
+            'can' => 'isAdmin',
+            'url' => 'courses'
+        ],
+        [
+            'text' => 'Processos',
+            'icon' => 'fas fa-arrows-down-to-people',
+            'can' => 'isAdmin',
+            'url' => 'processes'
+        ],
+
+        ['header' => 'Gerenciamento de usuários'],
         [
             'text' => 'Usuários',
             'icon' => 'fas fa-users-gear',
@@ -262,7 +299,7 @@ return [
                     'can' => 'isAdmin'
                 ]
             ],
-        ]
+        ],
     ],
 
     /*
@@ -321,27 +358,32 @@ return [
             ],
         ],
         'Select2' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/select2/js/select2.full.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/select2/css/select2.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'Chartjs' => [
             'active' => true,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
-                ],
-            ],
-        ],
-        'Chartjs' => [
-            'active' => false,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '//cdn.jsdelivr.net/npm/chart.js',
                 ],
             ],
         ],
@@ -350,8 +392,8 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],

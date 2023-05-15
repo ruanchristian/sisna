@@ -81,6 +81,10 @@
 
 <body class="@yield('classes_body')" @yield('body_data')>
 
+    <section id="loading">
+        <div id="loading-content"></div>
+    </section>
+
     {{-- Body Content --}}
     @yield('body')
 
@@ -110,5 +114,17 @@
     @yield('adminlte_js')
 
 </body>
+
+<script>
+    $(document).ajaxStart(function () {
+        $('#loading').addClass('loading');
+        $('#loading-content').addClass('loading-content');
+    });
+
+    $(document).ajaxStop(function () {
+        $('#loading').removeClass('loading');
+        $('#loading-content').removeClass('loading-content');
+    });
+</script>
 
 </html>

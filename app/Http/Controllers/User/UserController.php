@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
 
     public function index() {
-        $users = User::get();
+        $users = User::all();
         
         return view('user.users-index', compact('users'));
     }
@@ -25,13 +27,11 @@ class UserController extends Controller {
         
         User::create($user);
         
-        return back()->with('message', 'Usuário: '.$user['name'].' foi criado com sucesso!');
+        return back()->with('message', 'Usuário: <b>'.$user['name'].'</b> foi criado com sucesso!');
     }
 
     public function update(StoreUpdateUserRequest $request, int $id) {
-        if (!$user = User::find($id)) {
-            return redirect()->route('user.index');
-        }
+        if (!$user = User::find($id)) return to_route('user.index');
 
         $data = $request->except(['_method', '_token', 'password']);
         if ($request->password) {
@@ -39,19 +39,26 @@ class UserController extends Controller {
         }
         $user->update($data);
 
-        return redirect()->route('user.index')->with('success', 'Usuário '.$request->name.' foi editado com sucesso!');
+        return to_route('user.index')->with('success', 'Usuário: <b>'.$request->name.'</b> foi editado com sucesso!');
     }
 
     public function destroy(int $id) {
-        if (!$user = User::find($id)) {
-            return redirect()->route('user.index');
+        if (Auth::user()->id === $id || !$user = User::find($id)) {
+            return response(null, 404);
         }
         $user->destroy($id);
 
-        return redirect()->route('user.index')->with('success', 'Usuário '.$user->name.' excluído com sucesso!');
+        return to_route('user.index');
     }
 
     public function getUserById(int $id) {
-        return User::find($id) ?? redirect()->route('user.index')->with('error_msg', 'Usuário não encontrado no banco de dados.');
+        return User::find($id) ?? to_route('user.index')->with('error_msg', 'Usuário não encontrado no banco de dados.');
+    }
+
+    public function checkPassword(Request $request) {
+        if (Hash::check($request->senha, Auth::user()->password)) {
+            return response(['success' => 'Salvando alterações...']);
+        }
+        return response(['fail' => 'Sua senha está incorreta! Tente novamente'], 404);
     }
 }
