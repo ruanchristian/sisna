@@ -86,7 +86,7 @@
         </x-adminlte-input>
 
         <x-slot name="footerSlot">
-            <x-adminlte-button id="submit-modal" data-mypass="{{ Auth::user()->password }}" theme="primary" label="Salvar"/>
+            <x-adminlte-button id="submit-modal" theme="primary" label="Salvar"/>
         </x-slot>   
     </x-adminlte-modal>
 @stop

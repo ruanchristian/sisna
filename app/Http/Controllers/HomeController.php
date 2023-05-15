@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\{
     Course,
     SelectiveProcess,
+    Student,
     User
 };
 
@@ -29,7 +30,8 @@ class HomeController extends Controller
         $coursesCount = Course::all()->count();
         $processesCount = SelectiveProcess::all()->count();
         $adminsCount = User::where('type', 'administrador')->count();
+        $studentsCount = Student::all()->count();
 
-        return view('home', compact('coursesCount', 'processesCount', 'adminsCount'));
+        return view('home', compact('coursesCount', 'processesCount', 'adminsCount', 'studentsCount'));
     }
 }

@@ -52,12 +52,15 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>2</h3>
-                        <p>...</p>
+                        <h3>{{ $studentsCount }}</h3>
+                        <p>Participantes cadastrados</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-user-graduate"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="javascript:void(0);" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">
