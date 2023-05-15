@@ -50,7 +50,7 @@
             </div>
         </x-adminlte-card>
 
-        <form action="{{ route('configs.update', $process) }}" method="POST">
+        <form id="configs" action="{{ route('configs.update', $process) }}" method="POST">
             @csrf
             @method('PUT')
             <x-adminlte-card theme="primary" title="Ajustar número de vagas ofertadas" icon="fas fa-cog">
@@ -72,9 +72,23 @@
 
             <input type="hidden" id="order-selection" name="ordem_desempate" value="{{ $process->config->ordem_desempate }}">
 
-            <x-adminlte-button type="submit" class="d-flex ml-auto" label="Salvar" theme="primary" />
+            <x-adminlte-button data-toggle="modal" data-target="#modal-password" class="d-flex ml-auto mb-3" label="Salvar" theme="primary" />
         </form>
     </div>
+
+    <x-adminlte-modal id="modal-password" title="Confirme sua senha" icon="fas fa-user-lock">
+        <x-adminlte-input type="password" id="pass" label="Senha" placeholder="Sua senha aqui" name="">
+            <x-slot name="prependSlot">
+                <div class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </x-slot>
+        </x-adminlte-input>
+
+        <x-slot name="footerSlot">
+            <x-adminlte-button id="submit-modal" data-mypass="{{ Auth::user()->password }}" theme="primary" label="Salvar"/>
+        </x-slot>   
+    </x-adminlte-modal>
 @stop
 
 @push('js')

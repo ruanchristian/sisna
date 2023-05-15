@@ -270,16 +270,16 @@ return [
             'can' => 'isAdmin'
         ],
         [
-            'text' => 'Processos',
-            'icon' => 'fas fa-arrows-down-to-people',
-            'can' => 'isAdmin',
-            'url' => 'processes'
-        ],
-        [
             'text' => 'Cursos',
             'icon' => 'fas fa-graduation-cap',
             'can' => 'isAdmin',
             'url' => 'courses'
+        ],
+        [
+            'text' => 'Processos',
+            'icon' => 'fas fa-arrows-down-to-people',
+            'can' => 'isAdmin',
+            'url' => 'processes'
         ],
 
         ['header' => 'Gerenciamento de usuários'],

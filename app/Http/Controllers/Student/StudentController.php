@@ -14,7 +14,7 @@ class StudentController extends Controller {
         try {
             $process = SelectiveProcess::findOrFail($processId);
         } catch (ModelNotFoundException $e) {
-            return back()->with('error_msg', $e->getMessage());
+            return to_route('process.index')->with('error_msg', $e->getMessage());
         }
 
         $courses = collect(explode('-', $process->cursos))->map(function ($course_id) {

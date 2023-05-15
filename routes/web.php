@@ -53,9 +53,10 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
     Route::name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
 
-        Route::middleware('can:isAdmin,App\Models\User')->group(function () {
+        Route::middleware('can:isAdmin, App\Models\User')->group(function () {
             Route::get('/create', 'create')->name('create');
             Route::post('/create', 'store')->name('store');
+            Route::post('/checkpass', 'checkPassword');
             Route::put('/edit/{id}', 'update')->name('update');
             Route::get('/request/{id}', 'getUserById')->name('request');
             Route::delete('/delete/{id}', 'destroy')->name('destroy');

@@ -29,4 +29,45 @@ $(() => {
             updateOrder();
         });
     });
+
+    $('#submit-modal').click(function (e) {
+        e.preventDefault();
+
+        let passInput = $('#pass').val();
+
+        $.ajax({
+            url: $(location).attr('origin') + '/users/checkpass',
+            type: "POST",
+            data: {
+                senha: passInput,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(ans) {
+                Swal.fire({
+                    icon: 'success',
+                    title: ans.success,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    timer: 2000,
+                });
+
+                setTimeout(() => {$('#configs').submit()}, 2000);
+            },
+            error: function(error) {
+                $('#pass').val("");
+
+                Swal.fire({
+                    icon: 'error',
+                    title: error.responseJSON.fail,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+            }
+        });
+    });
 });
