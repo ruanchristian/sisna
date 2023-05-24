@@ -18,51 +18,62 @@
 @stop
 
 @section('content')
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $processes_count }}</h3>
+                        <h3>{{ $processesCount }}</h3>
                         <p>Processos seletivos</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-arrows-down-to-people"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="{{ route('process.index') }}" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ $courses_count }}</h3>
-                        <p>Cursos EEEPJAS</p>
+                        <h3>{{ $coursesCount }}</h3>
+                        <p>Cursos</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="{{ route('course.index') }}" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>2</h3>
-                        <p>...</p>
+                        <h3>{{ $studentsCount }}</h3>
+                        <p>Alunos cadastrados</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-user-graduate"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="javascript:void(0);" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>0</h3>
-                        <p>.,,.</p>
+                        <h3>{{ $adminsCount }}</h3>
+                        <p>{{ $adminsCount == 1 ? 'Administrador' : 'Administradores' }}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-code"></i>
                     </div>
+                    @can('isAdmin', Auth::user())
+                        <a href="{{ route('user.index') }}" class="small-box-footer"> Ver mais <i class="fas fa-arrow-circle-right"></i></a>
+                    @endcan
                 </div>
             </div>
         </div>

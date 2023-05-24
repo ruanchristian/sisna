@@ -81,10 +81,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-floppy-disk"></i>
-                        Salvar usuário
-                    </button>
+                    <x-adminlte-button type="submit" class="d-flex ml-auto" label="Salvar usuário" theme="primary" />
                 </div>
             </form>
         </div>

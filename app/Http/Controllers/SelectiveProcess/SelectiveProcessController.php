@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\SelectiveProcess;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProcessRequest;
+use App\Http\Requests\ProcessRequest;
 use App\Models\Course;
 use App\Models\SelectiveProcess;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class SelectiveProcessController extends Controller
         return view('process.process-index', compact('processos', 'cursos'));
     }
 
-    public function store(StoreProcessRequest $request)
+    public function store(ProcessRequest $request)
     {
         if (!is_countable($request->cursos) || count($request->cursos) != 4) {
             return back()->withErrors(['cursos' => "O processo seletivo precisa oferecer 4 cursos."]);
@@ -34,13 +34,10 @@ class SelectiveProcessController extends Controller
 
     public function updateState(Request $request, int $id)
     {
-        if (!$process = SelectiveProcess::find($id)) {
-            return response()->json(null, 404);
-        }
+        if (!$process = SelectiveProcess::find($id)) return response(null, 404);
+        
         $process->update($request->only('estado'));
-        return response()->json([
-            'ok' => 'Processo alterado para: <b>' . (($request->estado == 1) ? 'EM ANDAMENTO' : 'ENCERRADO' . '</b>')
-        ]);
+        return response(['ok' => 'Processo alterado para: <b>' . (($request->estado == 1) ? 'EM ANDAMENTO' : 'ENCERRADO' . '</b>')]);
     }
 
     // Função de teste

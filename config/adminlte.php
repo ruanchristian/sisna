@@ -246,20 +246,31 @@ return [
         ],
 
         [
-            'header' => 'Cursos e Processos Seletivos',
+            'header' => 'Controle de Novos Alunos',
             'can' => 'isAdmin'
         ],
         [
-            'text' => 'Processos',
-            'icon' => 'fas fa-arrows-down-to-people',
+            'text' => 'Visualizar gráficos',
             'can' => 'isAdmin',
-            'url' => 'processes'
+            'icon' => 'fas fa-chart-pie',
+            'url' => '#'
+        ],
+
+        [
+            'header' => 'Cursos e Processos Seletivos',
+            'can' => 'isAdmin'
         ],
         [
             'text' => 'Cursos',
             'icon' => 'fas fa-graduation-cap',
             'can' => 'isAdmin',
             'url' => 'courses'
+        ],
+        [
+            'text' => 'Processos',
+            'icon' => 'fas fa-arrows-down-to-people',
+            'can' => 'isAdmin',
+            'url' => 'processes'
         ],
 
         ['header' => 'Gerenciamento de usuários'],

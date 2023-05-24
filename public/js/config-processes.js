@@ -8,7 +8,7 @@ const changeState = (checkbox, p) => {
 
 function update(id, stateValue) {
     $.ajax({
-        url: $(location).attr("href") + "/change-state/" + id,
+        url: $(location).attr("origin") + "/processes/change-state/" + id,
         type: "POST",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),

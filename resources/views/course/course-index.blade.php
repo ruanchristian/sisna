@@ -36,7 +36,7 @@
                         <div class="custom-control custom-radio">
                             <input
                                 class="custom-control-input custom-control-input-danger @error('cor_curso') is-invalid @enderror"
-                                type="radio" id="vermelho" name="cor_curso" value="#dc3545">
+                                type="radio" id="vermelho" name="cor_curso" value="#ff0000">
                             <label for="vermelho" class="custom-control-label">Vermelho</label>
                         </div>
 
@@ -52,6 +52,13 @@
                                 class="custom-control-input custom-control-input-success @error('cor_curso') is-invalid @enderror"
                                 type="radio" id="verde" name="cor_curso" value="#008000">
                             <label for="verde" class="custom-control-label">Verde</label>
+                        </div>
+
+                        <div class="custom-control custom-radio">
+                            <input
+                                class="custom-control-input custom-control-input-marrom @error('cor_curso') is-invalid @enderror"
+                                type="radio" id="marrom" name="cor_curso" value="#964b00">
+                            <label for="marrom" class="custom-control-label">Marrom</label>
                         </div>
 
                         <div class="custom-control custom-radio">
@@ -76,13 +83,13 @@
             <div class="col mb-3">
                 <x-adminlte-card title="Editar cursos" theme="primary" icon="fas fa-pen">
                     @if ($courses->isEmpty())
-                        <b class="text-danger">Não existem processos seletivos cadastrados no sistema.</b>
+                        <b class="text-danger">Não existem cursos cadastrados no sistema.</b>
                     @else
-                      <div class="table-responsive"> 
+                      <div style="max-height: 312px;" class="table-responsive"> 
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Índice</th>
+                                    <th>ID</th>
                                     <th>Nome</th>
                                     <th>Ações</th>
                                 </tr>
@@ -90,7 +97,7 @@
                             <tbody>
                                 @foreach ($courses as $course)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <span
                                                 style="color: @if ($course->cor_curso == '#ffc107') #000; @else #FFF; @endif background-color: {{ $course->cor_curso }}"
