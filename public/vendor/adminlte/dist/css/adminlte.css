@@ -53007,8 +53007,8 @@ a.text-muted:hover {
 }
 
 .loading {
-   z-index: 20;
-   position: absolute;
+   z-index: 100;
+   position: fixed;
    top: 0;
    left: -5px;
    width: 100%;

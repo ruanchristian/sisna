@@ -250,19 +250,10 @@ return [
             'can' => 'isAdmin'
         ],
         [
-            'text' => 'Alunos',
+            'text' => 'Visualizar gráficos',
             'can' => 'isAdmin',
-            'icon' => 'fas fa-user-graduate',
-            'submenu' => [
-                [
-                    'text' => 'Cadastrar novos alunos',
-                    'icon' => 'fas fa-school',
-                    'url' => 'students'
-                ],
-                [
-                    //
-                ]
-            ]
+            'icon' => 'fas fa-chart-pie',
+            'url' => '#'
         ],
 
         [

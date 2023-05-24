@@ -18,7 +18,6 @@
 @stop
 
 @section('content')
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-6">
@@ -53,7 +52,7 @@
                 <div class="small-box bg-warning">
                     <div class="inner">
                         <h3>{{ $studentsCount }}</h3>
-                        <p>Participantes cadastrados</p>
+                        <p>Alunos cadastrados</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-user-graduate"></i>

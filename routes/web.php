@@ -36,8 +36,11 @@ Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
     
     Route::controller(StudentController::class)->prefix('students')->group(function () {
         Route::name('student.')->group(function () {
+            Route::get('/visualization/{processId}', 'viewStudents')->name('visualization');
             Route::get('/create/{processId}', 'index')->name('index');
-            Route::post('/create-student/{process}', 'store')->name('create');
+            Route::get('/edit/{process}/{student}', 'edit')->name('edit');
+            Route::post('/create/{process}', 'store')->name('create');
+            Route::put('/update/{student}', 'update')->name('update');
         });
     });
 
