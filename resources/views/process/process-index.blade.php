@@ -88,7 +88,7 @@
                                             </td>
                                             <td>
                                                 <div class="dropdown">
-                                                    <button class="btn btn-success dropdown-toggle" type="button"
+                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }} class="btn btn-success dropdown-toggle drop-d" type="button"
                                                         data-toggle="dropdown" aria-expanded="false">
                                                         <i class="fas fa-user-graduate"></i>
                                                         Participantes
@@ -103,8 +103,10 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('configs.index', $processo->id) }}">
-                                                    <x-adminlte-button style="white-space: nowrap;" label="Ajustar critérios" theme="info"
-                                                        icon="fas fa-gears" />
+                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }} class="btn btn-info drop-d" style="white-space: nowrap;">
+                                                        <i class="fas fa-gears"></i>
+                                                        Ajustar critérios
+                                                    </button>
                                                 </a>
                                             </td>
                                         </tr>

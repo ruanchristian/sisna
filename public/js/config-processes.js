@@ -3,7 +3,13 @@ const changeState = (checkbox, p) => {
 
     update(checkbox.value, checkbox.checked);
 
-    checkbox.checked ? state.innerText = "Em andamento" : state.innerText = "Encerrado"
+    if (checkbox.checked) {
+        $('.drop-d').prop('disabled', false);
+        state.innerText = "Em andamento"
+    } else {
+        $('.drop-d').prop('disabled', true);
+        state.innerText = "Encerrado";
+    }
 };
 
 function update(id, stateValue) {

@@ -29,8 +29,8 @@
                 @csrf
                 @method('PUT')
             @else
-                <form action="{{ route('student.create', $process->id) }}" method="POST">
-                    @csrf
+            <form action="{{ route('student.create', $process->id) }}" method="POST">
+                @csrf
         @endif
         <x-adminlte-card theme="primary"
             title="{{ isset($student) ? 'Edite os dados do aluno abaixo' : 'Informe os dados abaixo' }}"
@@ -81,3 +81,16 @@
         </form>
     </div>
 @stop
+
+@push('js')
+    @if (session()->has('success'))
+        <script>
+        Swal.fire({
+        title: 'Feito!',
+        html: `{!! session('success') !!}`,
+        icon: 'success',
+        confirmButtonColor: '#3c6cac'
+    });
+        </script>
+    @endif
+@endpush

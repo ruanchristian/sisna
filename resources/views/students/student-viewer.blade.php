@@ -13,9 +13,7 @@
                 <li class="breadcrumb-item">
                     <a href="{{ route('student.index', $process->id) }}">Cadastrar alunos no processo de {{ $process->ano }}</a>
                 </li>
-                <li class="breadcrumb-item active">
-                    Visualização
-                </li>
+                <li class="breadcrumb-item active">Visualização</li>
             </ol>
         </div>
     </div>
@@ -32,7 +30,7 @@
                     <table class="table table-bordered table-hover collapsed" id="students-table">
                         <thead>
                             <tr>
-                                <th class="no-orderable">ID</th>
+                                <th>ID</th>
                                 <th class="no-orderable">Nome</th>
                                 <th class="no-orderable">Curso</th>
                                 <th>Data de Nasc.</th>
@@ -94,4 +92,15 @@
             });
         });
     </script>
+
+    @if (session()->has('success'))
+        <script>
+            Swal.fire({
+            title: 'Feito!',
+            html: `{!! session('success') !!}`,
+            icon: 'success',
+            confirmButtonColor: '#3c6cac'
+        });
+        </script>
+    @endif
 @endpush

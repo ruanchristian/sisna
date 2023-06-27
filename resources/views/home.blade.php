@@ -51,7 +51,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $studentsCount }}</h3>
+                        <h3>{{ $studentsCount > 99999 ? '99999+' : $studentsCount }}</h3>
                         <p>Alunos cadastrados</p>
                     </div>
                     <div class="icon">

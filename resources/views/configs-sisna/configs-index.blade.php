@@ -12,7 +12,7 @@
 
     <div class="container-fluid">
         @if($errors->any())
-         <x-adminlte-alert theme="danger" title="Erro" dismissable>
+        <x-adminlte-alert theme="danger" title="Erro" dismissable>
             {{ $errors->first('msg') }}
         </x-adminlte-alert>
         @endif
@@ -72,7 +72,7 @@
 
             <input type="hidden" id="order-selection" name="ordem_desempate" value="{{ $process->config->ordem_desempate }}">
 
-            <x-adminlte-button data-toggle="modal" data-target="#modal-password" class="d-flex ml-auto mb-3" label="Salvar" theme="primary" />
+            <x-adminlte-button data-toggle="modal" data-target="#modal-password" class="d-flex ml-auto" label="Salvar" theme="primary" /><br>
         </form>
     </div>
 

@@ -18,6 +18,9 @@ class StudentController extends Controller {
             return to_route('process.index')->with('error_msg', $e->getMessage());
         }
 
+        if ($process->estado == 0) return to_route('process.index')
+                                          ->with('error_msg', 'Este processo está inativo. Ative-o se quiser cadastrar/editar novos participantes.');
+
         $courses = collect(explode('-', $process->cursos))->map(function ($course_id) {
             return Course::find($course_id);
         });
@@ -39,13 +42,13 @@ class StudentController extends Controller {
 
         $process->students()->create($data);
 
-        return back();
+        return back()->with('success', 'Participante cadastrado com sucesso.');
     }
 
     public function update(StudentRequest $request, Student $student) {
         $student->update($request->validated());
 
-        return to_route('student.visualization', $student->process->id);
+        return to_route('student.visualization', $student->process->id)->with('success', "Participante <b>$student->id</b> foi editado com sucesso");
     }
 
     public function viewStudents(int $processId) {
@@ -54,6 +57,9 @@ class StudentController extends Controller {
         } catch (ModelNotFoundException $e) {
             return to_route('process.index')->with('error_msg', $e->getMessage());
         }
+
+        if ($process->estado == 0) return to_route('process.index')
+                                          ->with('error_msg', 'Este processo está inativo. Ative-o se quiser cadastrar/editar novos participantes.');
 
         $students = $process->students;
 
