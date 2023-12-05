@@ -5,9 +5,11 @@ const changeState = (checkbox, p) => {
 
     if (checkbox.checked) {
         $('.drop-d').prop('disabled', false);
+        $('.res').prop('disabled', true);
         state.innerText = "Em andamento"
     } else {
         $('.drop-d').prop('disabled', true);
+        $('.res').prop('disabled', false);
         state.innerText = "Encerrado";
     }
 };

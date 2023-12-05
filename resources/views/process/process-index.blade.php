@@ -66,6 +66,7 @@
                                         <th>Situação</th>
                                         <th>Participantes</th>
                                         <th>Configurações</th>
+                                        <th>Resultados</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,7 +89,8 @@
                                             </td>
                                             <td>
                                                 <div class="dropdown">
-                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }} class="btn btn-success dropdown-toggle drop-d" type="button"
+                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }}
+                                                        class="btn btn-success dropdown-toggle drop-d" type="button"
                                                         data-toggle="dropdown" aria-expanded="false">
                                                         <i class="fas fa-user-graduate"></i>
                                                         Participantes
@@ -97,15 +99,27 @@
                                                         <li><a class="dropdown-item"
                                                                 href="{{ route('student.index', $processo->id) }}">Cadastrar
                                                                 participantes</a></li>
-                                                        <li><a class="dropdown-item" href="{{ route('student.visualization', $processo->id) }}">Editar participantes</a></li>
+                                                        <li><a class="dropdown-item"
+                                                                href="{{ route('student.visualization', $processo->id) }}">Ver
+                                                                participantes</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                             <td>
                                                 <a href="{{ route('configs.index', $processo->id) }}">
-                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }} class="btn btn-info drop-d" style="white-space: nowrap;">
+                                                    <button {{ $processo->estado == 0 ? 'disabled' : '' }}
+                                                        class="btn btn-info drop-d" style="white-space: nowrap;">
                                                         <i class="fas fa-gears"></i>
                                                         Ajustar critérios
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('resultado.index', $processo->id) }}">
+                                                    <button {{ $processo->estado == 1 ? 'disabled' : '' }}
+                                                        title="Ver resultados de {{ $processo->ano }}"
+                                                        class="btn btn-xs btn-default text-primary mx-1 shadow ml-4 mt-1 res">
+                                                        <i class="fas fa-xl fa-eye"></i>
                                                     </button>
                                                 </a>
                                             </td>

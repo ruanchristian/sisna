@@ -11,10 +11,15 @@ class Result extends Model
 
     public $timestamps = false;
 
+    public function student() {
+        return $this->hasOne(Student::class, 'id', 'student_id');
+    }
+
     protected $fillable = [
         'student_id',
-        'course_id',
+        'process_id',
         'is_classified',
-        'origin'
+        'origin',
+        'course_id'
     ];
 }

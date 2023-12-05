@@ -246,17 +246,6 @@ return [
         ],
 
         [
-            'header' => 'Controle de Novos Alunos',
-            'can' => 'isAdmin'
-        ],
-        [
-            'text' => 'Visualizar gráficos',
-            'can' => 'isAdmin',
-            'icon' => 'fas fa-chart-pie',
-            'url' => '#'
-        ],
-
-        [
             'header' => 'Cursos e Processos Seletivos',
             'can' => 'isAdmin'
         ],

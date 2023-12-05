@@ -31,7 +31,8 @@ class HomeController extends Controller
         $processesCount = SelectiveProcess::all()->count();
         $adminsCount = User::where('type', 'administrador')->count();
         $studentsCount = Student::all()->count();
+        $ativos = SelectiveProcess::where('estado', 1)->get();
 
-        return view('home', compact('coursesCount', 'processesCount', 'adminsCount', 'studentsCount'));
+        return view('home', compact('coursesCount', 'processesCount', 'adminsCount', 'studentsCount', 'ativos'));
     }
 }
