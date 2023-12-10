@@ -4,12 +4,11 @@
 
 @section('content_header')
     <div class="container-fluid">
-        <h1>Ajustar critérios de seleção - <span style="text-decoration: underline;">{{ $process->ano }}</span></h1>
+        <h1>Ajustar critérios de seleção - <u>{{ $process->ano }}</u></h1>
     </div>
 @stop
 
 @section('content')
-
     <div class="container-fluid">
         @if($errors->any())
         <x-adminlte-alert theme="danger" title="Erro" dismissable>

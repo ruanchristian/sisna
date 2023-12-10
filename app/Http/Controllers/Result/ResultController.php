@@ -7,20 +7,18 @@ use App\Models\Course;
 use App\Models\Result;
 use App\Models\SelectiveProcess;
 
-class ResultController extends Controller
-{
+class ResultController extends Controller {
 
-    public function index(int $id)
-    {
+    public function index(int $id) {
         $r = Result::where('process_id', $id)->get();
-
+        $ano = SelectiveProcess::find($id)->ano;
         $cursos = Course::all();
 
         $resultado = $r->groupBy('origin')->map(function ($res) {
             return $res->groupBy('is_classified')
                 ->map(function ($classifiedResults) {
                     return $classifiedResults->groupBy('course_id');
-                });
+            });
         });
 
         $publica = collect();
@@ -38,11 +36,29 @@ class ResultController extends Controller
             }
         });
 
-        return view('result.result-index', compact('publica', 'particular', 'publicaClass', 'particularClass', 'cursos'));
+        $publicaClassificaveis = [
+            'PCD' => $this->getByOrigin($publicaClass, 'PCD'),
+            'PUBLICA-AMPLA' => $this->getByOrigin($publicaClass, 'PUBLICA-AMPLA'),
+            'PUBLICA-PROX-EEEP' => $this->getByOrigin($publicaClass, 'PUBLICA-PROX-EEEP'),
+        ];
+
+        $particularClassificaveis = [
+            'PRIVATE-AMPLA' => $this->getByOrigin($particularClass, 'PRIVATE-AMPLA'),
+            'PRIVATE-PROX-EEEP' => $this->getByOrigin($particularClass, 'PRIVATE-PROX-EEEP'),
+        ];
+
+        return view('result.result-index',
+         compact(
+            'publica', 
+            'particular', 
+            'publicaClassificaveis',
+            'particularClassificaveis',
+            'cursos', 
+            'ano'
+        ));
     }
 
-    public function rsa($processo_id)
-    {
+    public function rsa($processo_id) {
         $process = SelectiveProcess::findOrFail($processo_id);
         $courses = explode('-', $process->cursos);
 
@@ -80,8 +96,8 @@ class ResultController extends Controller
                 ]);
             }
 
-            $classificaveis = $std->diff($topStudents);
             // Classificavéis
+            $classificaveis = $std->diff($topStudents);
             foreach ($classificaveis as $s) {
                 Result::create([
                     'student_id' => $s->id,
@@ -92,5 +108,13 @@ class ResultController extends Controller
                 ]);
             }
         }
+    }
+
+    function getByOrigin($collection, $category) {
+        return $collection->flatMap(function ($classifiedResults) use ($category) {
+            return $classifiedResults->filter(function ($curso_r) use ($category) {
+                return $curso_r['origin'] === $category;
+            })->flatten();
+        });
     }
 }

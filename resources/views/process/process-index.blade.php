@@ -11,7 +11,6 @@
 @stop
 
 @section('content')
-
     <div class="container-fluid">
         <div class="row mt-1">
             <div class="col mb-3">
@@ -78,7 +77,7 @@
                                                 <div
                                                     class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                                     <input type="checkbox" class="custom-control-input"
-                                                        onchange="changeState(this, `{{ $processo->ano }}`)"
+                                                        onchange="changeState(this, `{{ $processo->ano }}`, `{{ $processo->id }}`)"
                                                         id="{{ $processo->id }}" value="{{ $processo->id }}"
                                                         {{ $processo->estado == 1 ? 'checked' : '' }}>
                                                     <label id="{{ $processo->ano }}" class="custom-control-label"
@@ -90,35 +89,38 @@
                                             <td>
                                                 <div class="dropdown">
                                                     <button {{ $processo->estado == 0 ? 'disabled' : '' }}
-                                                        class="btn btn-success dropdown-toggle drop-d" type="button"
+                                                        class="btn btn-success dropdown-toggle drop-d{{ $processo->ano }}" type="button"
                                                         data-toggle="dropdown" aria-expanded="false">
                                                         <i class="fas fa-user-graduate"></i>
                                                         Participantes
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item"
+                                                        <li><a target="_blank" class="dropdown-item"
                                                                 href="{{ route('student.index', $processo->id) }}">Cadastrar
                                                                 participantes</a></li>
                                                         <li><a class="dropdown-item"
                                                                 href="{{ route('student.visualization', $processo->id) }}">Ver
                                                                 participantes</a></li>
+                                                        <li><a class="dropdown-item"
+                                                                    href="#">Conferência dos lotes</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                             <td>
                                                 <a href="{{ route('configs.index', $processo->id) }}">
                                                     <button {{ $processo->estado == 0 ? 'disabled' : '' }}
-                                                        class="btn btn-info drop-d" style="white-space: nowrap;">
+                                                        class="btn btn-info drop-d{{ $processo->ano }}" style="white-space: nowrap;">
                                                         <i class="fas fa-gears"></i>
                                                         Ajustar critérios
                                                     </button>
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('resultado.index', $processo->id) }}">
-                                                    <button {{ $processo->estado == 1 ? 'disabled' : '' }}
+                                                <a class="res-{{ $processo->ano }}"
+                                                     href="{{ $processo->estado ? '#' : route('resultado.index', $processo->id) }}">
+                                                    <button {{ $processo->estado ? 'disabled' : '' }} id="ver-{{ $processo->ano }}"
                                                         title="Ver resultados de {{ $processo->ano }}"
-                                                        class="btn btn-xs btn-default text-primary mx-1 shadow ml-4 mt-1 res">
+                                                        class="btn btn-xs btn-default text-primary mx-1 shadow ml-4 mt-1">
                                                         <i class="fas fa-xl fa-eye"></i>
                                                     </button>
                                                 </a>

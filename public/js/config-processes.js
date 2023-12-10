@@ -1,15 +1,17 @@
-const changeState = (checkbox, p) => {
+const changeState = (checkbox, p, id) => {
     let state = document.getElementById(p);
 
     update(checkbox.value, checkbox.checked);
 
     if (checkbox.checked) {
-        $('.drop-d').prop('disabled', false);
-        $('.res').prop('disabled', true);
+        $('.drop-d'+p).prop('disabled', false);
+        $('.res-'+p).attr('href', '#');
+        $('#ver-'+p).prop('disabled', true);
         state.innerText = "Em andamento"
     } else {
-        $('.drop-d').prop('disabled', true);
-        $('.res').prop('disabled', false);
+        $('.drop-d'+p).prop('disabled', true);
+        $('.res-'+p).attr('href', 'results/'+id);
+        $('#ver-'+p).prop('disabled', false);
         state.innerText = "Encerrado";
     }
 };

@@ -14,7 +14,13 @@ class SelectiveProcess extends Model {
         parent::boot();
 
         static::created(function ($process) {
-            $process->config()->create();
+            $process->config()->create([
+                'ordem_desempate' => json_encode(
+                    ['media_final' => 'DESC', 
+                    'data_nascimento' => 'ASC',
+                    'media_pt' => 'DESC', 
+                    'media_mt' => 'DESC'], true)
+            ]);
         });
     }
 

@@ -57,10 +57,10 @@
                                                 <i class="fas fa-lg fa-fw fa-pen"></i>
                                             </button></a>
 
-                                        <button title="Deletar {{ $student->nome }}"
+                                        {{-- <button title="Deletar {{ $student->nome }}"
                                             class="btn btn-xs btn-default text-danger mx-1 mb-1 shadow">
                                             <i class="fas fa-lg fa-fw fa-trash"></i>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @endforeach
