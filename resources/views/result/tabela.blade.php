@@ -47,9 +47,9 @@
                 <tr>
                     <td>{{ $loop->iteration }}º</td>
                     <td>{{ $aluno->student->nome }}</td>
-                    <td>{{ number_format($aluno->student->media_pt, 2, '.', '') }}</td>
-                    <td>{{ number_format($aluno->student->media_mt, 2, '.', '') }}</td>
-                    <td>{{ number_format($aluno->student->media_final, 2, '.', '') }}</td>
+                    <td align="center">{{ number_format($aluno->student->media_pt, 2, '.', '') }}</td>
+                    <td align="center">{{ number_format($aluno->student->media_mt, 2, '.', '') }}</td>
+                    <td align="center">{{ number_format($aluno->student->media_final, 2, '.', '') }}</td>
                 </tr>
             @endforeach
         </tbody>

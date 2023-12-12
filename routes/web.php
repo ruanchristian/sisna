@@ -64,6 +64,10 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
 
 Route::controller(StudentController::class)->middleware('auth')->prefix('students')->group(function () {
     Route::name('student.')->group(function () {
+        Route::middleware('can:isAdmin, App\Models\User')->group(function() {
+            Route::get('/lotes/{id}', 'lotes')->name('lotes');
+        });
+
         Route::get('/visualization/{processId}', 'viewStudents')->name('visualization');
         Route::get('/create/{processId}', 'index')->name('index');
         Route::get('/edit/{process}/{student}', 'edit')->name('edit');

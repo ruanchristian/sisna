@@ -102,7 +102,8 @@
                                                                 href="{{ route('student.visualization', $processo->id) }}">Ver
                                                                 participantes</a></li>
                                                         <li><a class="dropdown-item"
-                                                                    href="#">Conferência dos lotes</a></li>
+                                                                href="{{ route('student.lotes', $processo->id) }}"
+                                                                    href="#">Lotes</a></li>
                                                     </ul>
                                                 </div>
                                             </td>

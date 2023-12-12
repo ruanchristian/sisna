@@ -28,6 +28,29 @@ class StudentController extends Controller {
         return view('students.student-index', compact('process', 'courses'));
     }
 
+    public function lotes($id) {
+        $ano = SelectiveProcess::findOrFail($id)->ano;
+        $cursos = Course::all();
+
+        $pcd = $this->getByCategory($id, 'PCD');
+        $publicaAmpla = $this->getByCategory($id, 'PUBLICA-AMPLA');
+        $publicaProximos = $this->getByCategory($id, 'PUBLICA-PROX-EEEP');
+        $privAmpla = $this->getByCategory($id, 'PRIVATE-EEEP');
+        $privProximos = $this->getByCategory($id, 'PRIVATE-PROX-EEEP');
+
+
+        return view('students.lotes', 
+            compact(
+                'ano',
+                'cursos',
+                'pcd',
+                'publicaAmpla',
+                'publicaProximos',
+                'privAmpla',
+                'privProximos'
+            ));
+    }
+
     public function edit(SelectiveProcess $process, Student $student) {
         $courses = collect(explode('-', $process->cursos))->map(function ($course_id) {
             return Course::find($course_id);
@@ -49,6 +72,14 @@ class StudentController extends Controller {
         $student->update($request->validated());
 
         return to_route('student.visualization', $student->process->id)->with('success', "Participante <b>$student->id</b> foi editado com sucesso");
+    }
+
+    public function getByCategory(int $id, string $category) {
+        $alunos = Student::where('processo_id', $id)
+            ->where('origem', 'LIKE', $category . '%')
+            ->get();
+
+        return $alunos->chunk(20); // Divide os alunos em lotes de 20   
     }
 
     public function viewStudents(int $processId) {
