@@ -30,7 +30,7 @@
                     <table class="table table-bordered table-hover collapsed" id="students-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Nº de inscrição</th>
                                 <th class="no-orderable">Nome</th>
                                 <th class="no-orderable">Curso</th>
                                 <th>Data de Nasc.</th>

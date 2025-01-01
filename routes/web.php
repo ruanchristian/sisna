@@ -77,5 +77,4 @@ Route::controller(StudentController::class)->middleware('auth')->prefix('student
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Auth::routes();

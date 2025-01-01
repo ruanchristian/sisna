@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Cadastrar participantes - ')
+@section('title', !isset($student) ? 'Cadastrar aluno - ' : 'Editar aluno - ')
 
 @section('content_header')
     <div class="container-fluid">
@@ -38,7 +38,7 @@
             <x-adminlte-input label="Nome completo" name="nome" type="text" placeholder="Nome completo..."
                 value="{{ isset($student) ? $student->nome : old('nome') }}" required />
 
-            <x-adminlte-select name="origem" label="Grupo pertencente">
+            <x-adminlte-select name="origem" label="Categoria">
                 <option @if (isset($student) && $student->origem === 'PUBLICA-AMPLA') selected @endif value="PUBLICA-AMPLA">Pública Ampla Concorrência
                 </option>
                 <option @if (isset($student) && $student->origem === 'PUBLICA-PROX-EEEP') selected @endif value="PUBLICA-PROX-EEEP">Pública Residente

@@ -1,17 +1,15 @@
-@php
-    setlocale(LC_TIME, 'pt_BR.utf-8');
-    $dia = date('d');
-    $mes = strftime('%B', mktime(0, 0, 0, date('m')));
-    $ano = date('Y');
-@endphp
-
 <div id="lote_#{{ $type.$curr.$orig }}" style="text-align: center;">
     <table border="1" width="100%">
         <thead>
             <tr>
                 <td colspan="7">
                     <p style="text-transform: uppercase;" align="center" class="text-center">
-                        ALUNOS DE ESCOLAS {{ $orig }} - <u>{{ $type }}</u><br>
+                        @if ($type === "PCD")
+                            ALUNOS - <u>PCD</u>
+                        @else
+                            ALUNOS DE ESCOLAS {{ $orig }} - <u>{{ $type }}</u>
+                        @endif
+                        <br>
                         <b>{{ $curr+1 }}º Lote</b>
                     </p>
                 </td>
@@ -39,8 +37,7 @@
             @endforeach
         </tbody>
     </table><br>
-    <label style="float: right;">Quixeramobim/CE, {{ $dia.' de '.$mes.' de '.$ano }}</label>
-</div><br><br>
+</div>
 <x-adminlte-button 
 class="print" id="lote_#{{ $type.$curr.$orig }}" 
 icon="fas fa-print" style="float: right;" label="Imprimir" theme="primary" />

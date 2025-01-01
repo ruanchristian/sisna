@@ -15,7 +15,7 @@ return [
     */
 
     'title' => '',
-    'title_postfix' => 'SISNA',
+    'title_postfix' => 'SISNA V2',
     'description' => 'Sistema Interno de Seleção dos Novos Alunos',
 
     /*
@@ -48,7 +48,7 @@ return [
     |
     */
 
-    'logo' => '<b>SISNA</b>',
+    'logo' => '<b>SISNA V2</b>',
     'logo_img' => 'vendor/adminlte/dist/img/sisna-logo.png',
     'logo_img_class' => 'brand-image img-circle',
     'logo_img_xl' => null,

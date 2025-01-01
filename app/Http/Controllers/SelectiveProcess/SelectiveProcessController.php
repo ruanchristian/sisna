@@ -21,7 +21,7 @@ class SelectiveProcessController extends Controller {
 
     public function store(ProcessRequest $request) {
         if (!is_countable($request->cursos) || count($request->cursos) != 4) {
-            return back()->withErrors(['cursos' => "O processo seletivo precisa oferecer 4 cursos."]);
+            return back()->withErrors(['cursos' => "O processo seletivo precisa oferecer no mínimo 4 cursos."]);
         }
         $processo = $request->all();
         $processo['cursos'] = implode('-', $request->cursos);
@@ -37,9 +37,8 @@ class SelectiveProcessController extends Controller {
         $process->update($request->only('estado'));
 
         if ($request->estado == 0) {
+            // calcula o resultado novamente...
             Result::where('process_id', $id)->delete();
-
-            // calcular resultado novamente...
             $result = new ResultController();
             $result->rsa($id);
         }
@@ -47,14 +46,5 @@ class SelectiveProcessController extends Controller {
         $msg = 'Processo alterado para: <b>' . (($request->estado == 1) ? 'EM ANDAMENTO' : 'ENCERRADO') . '</b>';
     
         return response(['ok' => $msg]);
-    }
-
-    // Função de teste
-    public static function showResult($bestStudents, $origins): void {
-        foreach ($origins as $origem => $vagas) {
-            $students = $bestStudents->where('origem', $origem);
-
-            echo view('alunos.index', compact('students', 'origem'));
-        }
     }
 }

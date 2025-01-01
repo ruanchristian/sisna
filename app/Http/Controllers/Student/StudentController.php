@@ -35,9 +35,8 @@ class StudentController extends Controller {
         $pcd = $this->getByCategory($id, 'PCD');
         $publicaAmpla = $this->getByCategory($id, 'PUBLICA-AMPLA');
         $publicaProximos = $this->getByCategory($id, 'PUBLICA-PROX-EEEP');
-        $privAmpla = $this->getByCategory($id, 'PRIVATE-EEEP');
+        $privAmpla = $this->getByCategory($id, 'PRIVATE-AMPLA');
         $privProximos = $this->getByCategory($id, 'PRIVATE-PROX-EEEP');
-
 
         return view('students.lotes', 
             compact(
@@ -71,7 +70,8 @@ class StudentController extends Controller {
     public function update(StudentRequest $request, Student $student) {
         $student->update($request->validated());
 
-        return to_route('student.visualization', $student->process->id)->with('success', "Participante <b>$student->id</b> foi editado com sucesso");
+        return to_route('student.visualization', $student->process->id)
+                ->with('success', "O(a) participante: <b>$student->nome</b> foi editado com sucesso");
     }
 
     public function getByCategory(int $id, string $category) {
