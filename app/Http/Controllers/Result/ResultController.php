@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Result;
 use App\Models\SelectiveProcess;
+use Illuminate\Support\Facades\DB;
 
 class ResultController extends Controller {
     
@@ -65,16 +66,13 @@ class ResultController extends Controller {
             'PRIVATE-PROX-EEEP' => $config->vagas_private_prox,
         ];
         foreach ($courses as $id_curso) {
-            $std = $process->students()->where('curso_id', $id_curso);
-            // std contém todos os alunos daquele respectivo curso
+            $std = $process->students()->where('curso_id', $id_curso)   
+                   ->orderByRaw(implode(',', array_map(fn($cat, $ord) => "$cat $ord", array_keys($desempate), $desempate)))
+                   ->get();
+            // std contém tds os alunos ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
 
-            foreach ($desempate as $categoria => $ordem) $std->orderBy($categoria, $ordem);
-            
-            $std = $std->get(); // agora, std contém tds os alunos ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
             $aprov = collect(); // array que vai armazenar os alunos aprovados
-
-            // array que controla a qtd de vagas sobrando de cada categoria. [categoria => vagas_sobrando]
-            $auxiliar = $origens;
+            $auxiliar = $origens; // array que controla a qtd de vagas sobrando de cada categoria. [categoria => vagas_sobrando]
 
             // Alocação dos alunos aprovados nas suas respectivas categorias com base na qtd de vagas disponíveis
             // (PCD, PUBLICA AMPLA, RESIDENTES PUB, RESIDENTES PRIV...)
@@ -91,29 +89,29 @@ class ResultController extends Controller {
                     $aprov = $aprov->merge($extra); // os alunos que ocuparam essas novas vagas são adicionados no array principal dos aprovados.
                 }
             }
-            
-            // Salva alunos classificados
-            foreach ($aprov as $student) {
-                Result::create([
-                    'student_id' => $student->id,
-                    'process_id' => $processo_id,
-                    'is_classified' => 1, // flag (1 = aprovado, 0 = classificável)
-                    'origin' => $student->origem,
-                    'course_id' => $student->curso_id
-                ]);
-            }
-
-            // Classificavéis
             $classificaveis = $std->diff($aprov); 
-            foreach ($classificaveis as $s) {
-                Result::create([
-                    'student_id' => $s->id,
-                    'process_id' => $processo_id,
-                    'is_classified' => 0,
-                    'origin' => $s->origem,
-                    'course_id' => $s->curso_id
-                ]);
-            }
+            
+            DB::transaction(function () use ($aprov, $classificaveis, $processo_id) {
+                foreach ($aprov as $student) {
+                    Result::insert([
+                        'student_id' => $student->id,
+                        'process_id' => $processo_id,
+                        'is_classified' => 1, // flag (1 = aprovado, 0 = classificável)
+                        'origin' => $student->origem,
+                        'course_id' => $student->curso_id
+                    ]);                    
+                }
+
+                foreach ($classificaveis as $s) {
+                    Result::insert([
+                        'student_id' => $s->id,
+                        'process_id' => $processo_id,
+                        'is_classified' => 0,
+                        'origin' => $s->origem,
+                        'course_id' => $s->curso_id
+                    ]);
+                }
+            });
         }
     }
 }
