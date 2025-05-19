@@ -19,6 +19,7 @@ Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
     Route::controller(ResultController::class)->prefix('results')->group(function() {
         Route::name('resultado.')->group(function() {
             Route::get('/{id}', 'index')->name('index');
+            Route::post('/pdf', 'gerarPdf')->name('pdf');
         });
     });
 

@@ -4,6 +4,7 @@
     $mes = strftime('%B', mktime(0, 0, 0, date('m')));
 @endphp
 
+{{-- Tabela modelo de visualização (apenas WEB) --}}
 <div id="res_#{{ $cursoNome. $origin. $type. $flag }}" style="text-align: center;">
     <table border="1" width="100%">
         <thead>
@@ -74,9 +75,9 @@
         </tbody>
     </table><br>
     <label style="float: right;">Quixeramobim/CE, {{ $dia.' de '.$mes.' de '.date('Y') }}</label>
-    <img style="margin-left: 11rem;" width="370rem" src="{{ asset('img/assinatura.png') }}" alt="Assinatura da diretora escolar Irecê Fernandes">
-</div><br>
-<x-adminlte-button 
+    {{-- <img style="margin-left: 11.5rem; margin-top:-5.425rem;" width="360rem" src="{{ asset('img/assinatura.png') }}" alt="Assinatura da diretora escolar Irecê Fernandes"> --}}
+</div>
+{{-- <x-adminlte-button 
 class="print" id="res_#{{ $cursoNome.$origin.$type.$flag }}" 
-icon="fas fa-print" style="float: right;" label="Imprimir" theme="primary" />
+icon="fas fa-print" style="float: right;" label="Imprimir" theme="primary" /> --}}
 <br><br><br>

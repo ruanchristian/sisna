@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Result;
 use App\Models\SelectiveProcess;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ResultController extends Controller {
     
@@ -53,7 +55,7 @@ class ResultController extends Controller {
 
     public function rsa($processo_id) {
         $process = SelectiveProcess::findOrFail($processo_id);
-        $courses = explode('-', $process->cursos);
+        $courses = explode('-', $process->cursos); // "1-2-3-4" -> [1,2,3,4]
 
         $config = $process->config;
         $desempate = json_decode($config->ordem_desempate, true);
@@ -69,10 +71,10 @@ class ResultController extends Controller {
             $std = $process->students()->where('curso_id', $id_curso)   
                    ->orderByRaw(implode(',', array_map(fn($cat, $ord) => "$cat $ord", array_keys($desempate), $desempate)))
                    ->get();
-            // std contém tds os alunos ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
+            // std contém tds os alunos do curso ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
 
-            $aprov = collect(); // array que vai armazenar os alunos aprovados
-            $auxiliar = $origens; // array que controla a qtd de vagas sobrando de cada categoria. [categoria => vagas_sobrando]
+            $aprov = collect(); // array que vai armazenar os alunos aprovados de cada curso
+            $auxiliar = $origens; // array auxiliar que controla a qtd de vagas sobrando de cada categoria. [categoria => vagas_sobrando]
 
             // Alocação dos alunos aprovados nas suas respectivas categorias com base na qtd de vagas disponíveis
             // (PCD, PUBLICA AMPLA, RESIDENTES PUB, RESIDENTES PRIV...)
@@ -84,13 +86,13 @@ class ResultController extends Controller {
             // Distribuir vagas remanescentes (caso existam)
             foreach($auxiliar as $origem => $k) {
                 if($k > 0) { // se houver vagas não preenchidas...
-                    // Seleciona o k primeiros alunos disponíveis que ainda não tinham sido aprovados (priorizando os que estão no topo da lista).
+                    // Seleciona os k primeiros alunos disponíveis que ainda não tinham sido aprovados (priorizando os que estão no topo da lista).
                     $extra = $std->diff($aprov)->take($k);
                     $aprov = $aprov->merge($extra); // os alunos que ocuparam essas novas vagas são adicionados no array principal dos aprovados.
                 }
             }
             $classificaveis = $std->diff($aprov); 
-            
+
             DB::transaction(function () use ($aprov, $classificaveis, $processo_id) {
                 foreach ($aprov as $student) {
                     Result::insert([
@@ -113,5 +115,56 @@ class ResultController extends Controller {
                 }
             });
         }
+    }
+
+    public function gerarPdf(Request $req) {
+        $ano = $req->input('ano');
+        $cursos = collect(unserialize(base64_decode($req->input('cursos'))));
+        $publica = collect(unserialize(base64_decode($req->input('publica'))));
+        $particular = collect(unserialize(base64_decode($req->input('particular'))));
+        $pub_classfv = collect(unserialize(base64_decode($req->input('publicaClassificaveis'))));
+        $priv_classfv = collect(unserialize(base64_decode($req->input('particularClassificaveis'))));
+
+        $categorias = [
+            'PCD',
+            'PUBLICA-AMPLA',
+            'PUBLICA-PROX-EEEP',
+            'PRIVATE-AMPLA',
+            'PRIVATE-PROX-EEEP',
+        ];
+    
+        $classificados = [];
+
+        foreach ($cursos as $curso) {
+            $cursoId = $curso->id;
+    
+            foreach ($categorias as $cat) {
+                $classificados[$cursoId][$cat] = collect();
+    
+                if ($cat === 'PCD') {
+                    $classificados[$cursoId][$cat] = 
+                        ($publica[$cursoId][$cat] ?? collect())->merge($particular[$cursoId][$cat] ?? collect());
+                } elseif (str_starts_with($cat, 'PUBLICA')) {
+                    $classificados[$cursoId][$cat] = $publica[$cursoId][$cat] ?? collect();
+                } elseif (str_starts_with($cat, 'PRIVATE')) {
+                    $classificados[$cursoId][$cat] = $particular[$cursoId][$cat] ?? collect();
+                }
+            }
+        }
+
+        $pdf_final = Pdf::loadView('result.pdf', [
+            'ano' => $ano,
+            'cursos' => $cursos,
+            'classificados' => $classificados,
+            'publica_classfv' => $pub_classfv,
+            'private_classfv' => $priv_classfv,
+            'edital' => $req->input('editall'),
+            'res' => $req->input('resultado'),
+            'day' => $req->input('day'),
+            'month' => $req->input('month'),
+            'year' => $req->input('yearr')
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf_final->download("Resultado-EEEP-DR-JOSÉ-ALVES-DA-SILVEIRA {$ano}.pdf");
     }
 }
