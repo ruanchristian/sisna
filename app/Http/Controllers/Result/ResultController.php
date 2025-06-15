@@ -119,11 +119,11 @@ class ResultController extends Controller {
 
     public function gerarPdf(Request $req) {
         $ano = $req->input('ano');
-        $cursos = collect(unserialize(base64_decode($req->input('cursos'))));
-        $publica = collect(unserialize(base64_decode($req->input('publica'))));
-        $particular = collect(unserialize(base64_decode($req->input('particular'))));
-        $pub_classfv = collect(unserialize(base64_decode($req->input('publicaClassificaveis'))));
-        $priv_classfv = collect(unserialize(base64_decode($req->input('particularClassificaveis'))));
+        $cursos = collect(unserialize(gzuncompress(base64_decode($req->input('cursos')))));
+        $publica = collect(unserialize(gzuncompress(base64_decode($req->input('publica')))));
+        $particular = collect(unserialize(gzuncompress(base64_decode($req->input('particular')))));
+        $pub_classfv = collect(unserialize(gzuncompress(base64_decode($req->input('publicaClassificaveis')))));
+        $priv_classfv = collect(unserialize(gzuncompress(base64_decode($req->input('particularClassificaveis')))));
 
         $categorias = [
             'PCD',
