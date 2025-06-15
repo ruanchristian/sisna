@@ -92,10 +92,10 @@ O sistema possui as seguintes tabelas principais:
 
 ## Imagens
 
-![Home](https://postimg.cc/CndCct5J)
-![Cursos](https://postimg.cc/23X71z9t)
-![Processos](https://postimg.cc/NKR6CRGh)
-![Critérios](https://postimg.cc/XpRKgsbc)
+![Home](https://i.postimg.cc/mL0KVTpr/s4.png)
+![Cursos](https://i.postimg.cc/hPKy3vLK/s3.png)
+![Processos](https://i.postimg.cc/wjGwvkSB/s1.png)
+![Critérios](https://i.postimg.cc/y8dfsGp5/s2.png)
 
 ---
 
