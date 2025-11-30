@@ -24,6 +24,10 @@ class SelectiveProcess extends Model {
         });
     }
 
+    public function results() {
+        return $this->hasMany(Result::class, 'process_id');
+    }
+
     public function students() {
         return $this->hasMany(Student::class, 'processo_id');
     }

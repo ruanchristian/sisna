@@ -10,3 +10,9 @@ $(document).on('click', '.edit-course', function(){
         $('#form-update').attr('action', formUrl.replace(/edit-course\/\d+$/, "edit-course/" + COURSE_ID));
     });
 });
+
+document.getElementById('colorPicker').addEventListener('input', function () {
+    const radio = document.getElementById('custom_color');
+    radio.value = this.value;
+    radio.checked = true;
+});

@@ -16,8 +16,8 @@
                 <form action="{{ route('course.store') }}" method="POST">
                     @csrf
                     <x-adminlte-card title="Criar cursos" theme="primary" icon="fas fa-book-open">
-                        <x-adminlte-input minlength='3' maxlength='20' type="text" name="nome" label="Informe o nome do curso:"
-                            placeholder="Informe o nome do curso aqui..." required>
+                        <x-adminlte-input minlength='3' maxlength='20' type="text" name="nome"
+                            label="Informe o nome do curso:" placeholder="Informe o nome do curso aqui..." required>
                             <x-slot name="prependSlot">
                                 <div class="input-group-text">
                                     <i class="fas fa-book-open-reader"></i>
@@ -73,6 +73,24 @@
                             @enderror
                         </div>
 
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input @error('cor_curso') is-invalid @enderror" type="radio"
+                                id="custom_color" name="cor_curso" value="" />
+
+                            <label for="custom_color" class="custom-control-label">
+                                Cor Personalizada
+                            </label>
+
+                            <input type="color" id="colorPicker" style="margin-left: 10px; cursor: pointer;">
+
+                            @error('cor_curso')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+
                         <x-slot name="footerSlot">
                             <x-adminlte-button class="d-flex ml-auto" type="submit" theme="primary" label="Adicionar" />
                         </x-slot>
@@ -85,37 +103,38 @@
                     @if ($courses->isEmpty())
                         <b class="text-danger">Não existem cursos cadastrados no sistema.</b>
                     @else
-                      <div style="max-height: 312px;" class="table-responsive"> 
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($courses as $course)
+                        <div style="max-height: 312px;" class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <span
-                                                style="color: @if ($course->cor_curso == '#ffc107') #000; @else #FFF; @endif background-color: {{ $course->cor_curso }}"
-                                                class="badge translate-middle p-2">
-                                                {{ $course->nome }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button title="Editar {{ $course->nome }}" class="btn btn-xs btn-default text-primary mx-1 shadow edit-course"
-                                                value="{{ $course->id }}">
-                                                <i class="fas fa-lg fa-fw fa-pen"></i>
-                                            </button>
-                                        </td>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Ações</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    @foreach ($courses as $course)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                <span
+                                                    style="color: @if ($course->cor_curso == '#ffc107') #000; @else #FFF; @endif background-color: {{ $course->cor_curso }}"
+                                                    class="badge translate-middle p-2">
+                                                    {{ $course->nome }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button title="Editar {{ $course->nome }}"
+                                                    class="btn btn-xs btn-default text-primary mx-1 shadow edit-course"
+                                                    value="{{ $course->id }}">
+                                                    <i class="fas fa-lg fa-fw fa-pen"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     @endif
                 </x-adminlte-card>
             </div>
@@ -127,7 +146,8 @@
         @csrf
         <x-adminlte-modal id="modal-course" title="Editar curso" icon="fas fa-pen" static-backdrop scrollable>
 
-            <x-adminlte-input minlength="3" maxlength="20" name="nome" id="name-course" label="Nome do curso:" placeholder="Escolha um nome para o curso...">
+            <x-adminlte-input minlength="3" maxlength="20" name="nome" id="name-course" label="Nome do curso:"
+                placeholder="Escolha um nome para o curso...">
                 <x-slot name="prependSlot">
                     <div class="input-group-text">
                         <i class="fas fa-graduation-cap"></i>

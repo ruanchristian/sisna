@@ -8,6 +8,16 @@
         table { border-collapse: collapse; width: 100%; margin-top: 10px; }
         th, td { border: 1px solid #000; padding: 2px; text-align: center;  }
         th { background-color: #b3b3b3; }
+
+        .tabela-wrapper { 
+            page-break-before: always;
+            page-break-inside: avoid; 
+            margin-bottom: 2rem; 
+        }
+
+        .tabela-wrapper:first-of-type {
+            page-break-before: auto;
+        }
     </style>
 </head>
 <body>

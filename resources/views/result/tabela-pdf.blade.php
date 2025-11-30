@@ -1,5 +1,5 @@
 {{-- Tabela modelo do resultado GERAL (PDF) --}}
-<div style="page-break-inside: avoid; margin-bottom: 2rem;">
+<div class="tabela-wrapper">
     <table border="1" width="100%">
         <thead>
             <tr>
@@ -73,8 +73,8 @@
             Quixeramobim/CE, {{ $day }} de {{ ucfirst($month) }} de {{ $year }}
         </p>
 
-        <div style="text-align: center; margin-top: 0.25rem;">
-            <img style="max-width: 400px;" src="{{ public_path('img/assinatura.png') }}" alt="Assinatura da diretora escolar Irecê Fernandes">
+        <div style="text-align: center; margin-top: 0.13rem;">
+            <img width="150px" src="{{ public_path('img/assinatura-att.png') }}" alt="Assinatura da diretora escolar Irecê Fernandes">
         </div>
     </div>
 </div>

@@ -9,48 +9,70 @@ use App\Models\SelectiveProcess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ResultController extends Controller {
     
     public function index(int $id) {
-        $r = Result::where('process_id', $id)->get();
-        $ano = SelectiveProcess::find($id)->ano;
+        $process = SelectiveProcess::with(['results.student' ])->findOrFail($id);
+        $r = $process->results;
+        $ano = $process->ano;
         $cursos = Course::all();
 
-        // filtragem de alunos aprovados ou classficáveis através da flag (is_classified) e agrupa pelo seu respectivo curso
+        // CLASSIFICADOS — PÚBLICA
         $publica = $r->where('is_classified', 1)
-            ->filter(function ($aluno) {
-                return in_array($aluno->origin, ['PCD', 'PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP']);
-            })->groupBy('course_id')->map(function($group) {
-                return $group->groupBy('origin');
-        });
+            ->filter(fn($aluno) => in_array($aluno->origin, [
+                'PCD',
+                'PUBLICA-AMPLA',
+                'PUBLICA-PROX-EEEP'
+            ]))
+            ->groupBy('course_id')->map(fn($g) => $g->groupBy('origin'));
 
+        // CLASSIFICADOS — PARTICULAR
         $particular = $r->where('is_classified', 1)
-        ->filter(function ($aluno) {
-            return in_array($aluno->origin, ['PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP']);
-        })->groupBy('course_id')->map(function($group) {
-            return $group->groupBy('origin');
-        });
+            ->filter(fn($aluno) => in_array($aluno->origin, [
+                'PRIVATE-AMPLA',
+                'PRIVATE-PROX-EEEP'
+            ]))
+            ->groupBy('course_id')->map(fn($g) => $g->groupBy('origin'));
 
+        // CLASSIFICÁVEIS — PÚBLICA
         $publicaClassificaveis = $r->where('is_classified', 0)
-            ->filter(function ($aluno) {
-                return in_array($aluno->origin, ['PCD', 'PUBLICA-AMPLA', 'PUBLICA-PROX-EEEP']);
-        })->groupBy('course_id');
+            ->filter(fn($aluno) => in_array($aluno->origin, [
+                'PCD',
+                'PUBLICA-AMPLA',
+                'PUBLICA-PROX-EEEP'
+            ]))->groupBy('course_id');
 
+        // CLASSIFICÁVEIS — PARTICULAR
         $particularClassificaveis = $r->where('is_classified', 0)
-            ->filter(function ($aluno) {
-                return in_array($aluno->origin, ['PRIVATE-AMPLA', 'PRIVATE-PROX-EEEP']);
-        })->groupBy('course_id');
+            ->filter(fn($aluno) => in_array($aluno->origin, [
+                'PRIVATE-AMPLA',
+                'PRIVATE-PROX-EEEP'
+            ]))->groupBy('course_id');
+
+        $token = Str::uuid()->toString();
+
+        Cache::put("resultado_{$token}", [
+            'publica' => $publica,
+            'particular' => $particular,
+            'publicaClassificaveis' => $publicaClassificaveis,
+            'particularClassificaveis' => $particularClassificaveis,
+            'cursos' => $cursos
+        ], now()->addMinutes(20));
 
         return view('result.result-index',
-         compact(
-            'publica', 
-            'particular', 
-            'publicaClassificaveis',
-            'particularClassificaveis',
-            'cursos', 
-            'ano'
-        ));
+            compact(
+                'token',
+                'publica',
+                'particular',
+                'publicaClassificaveis',
+                'particularClassificaveis',
+                'cursos',
+                'ano'
+            )
+        );
     }
 
     public function rsa($processo_id) {
@@ -68,9 +90,9 @@ class ResultController extends Controller {
             'PRIVATE-PROX-EEEP' => $config->vagas_private_prox,
         ];
         foreach ($courses as $id_curso) {
-            $std = $process->students()->where('curso_id', $id_curso)   
-                   ->orderByRaw(implode(',', array_map(fn($cat, $ord) => "$cat $ord", array_keys($desempate), $desempate)))
-                   ->get();
+            $std = $process->students()->where('curso_id', $id_curso)
+                ->orderByRaw(implode(',', array_map(fn($cat, $ord) => "$cat $ord", array_keys($desempate), $desempate)))
+                ->get();
             // std contém tds os alunos do curso ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
 
             $aprov = collect(); // array que vai armazenar os alunos aprovados de cada curso
@@ -83,15 +105,34 @@ class ResultController extends Controller {
                 $aprov = $aprov->merge($selected);
                 $auxiliar[$origem] -= $selected->count();
             }
+
             // Distribuir vagas remanescentes (caso existam)
-            foreach($auxiliar as $origem => $k) {
-                if($k > 0) { // se houver vagas não preenchidas...
+            foreach ($auxiliar as $origem => $k) {
+                if ($k > 0) { // se houver vagas não preenchidas...
+                    if ($origem === 'PCD') {
+                        // 3.3 Se as vagas para estudantes com deficiência não forem preenchidas, as que sobrarem serão ocupadas
+                        // por estudantes de escola pública, seguindo a ordem de classificação geral
+
+                        // primeiro busca nos residentes próximos da escola pública
+                        $publica_prox = $std->where('origem', 'PUBLICA-PROX-EEEP')->diff($aprov)->take($k);
+                        $aprov = $aprov->merge($publica_prox);
+                        $k -= $publica_prox->count();
+
+                        // se ainda assim sobrar vagas, vai buscar na ampla da escola pública
+                        if ($k > 0) {
+                            $publica_ampla = $std->where('origem', 'PUBLICA-AMPLA')->diff($aprov)->take($k);
+                            $aprov = $aprov->merge($publica_ampla);
+                            $k -= $publica_ampla->count();
+                        }
+                        continue;
+                    }
+
                     // Seleciona os k primeiros alunos disponíveis que ainda não tinham sido aprovados (priorizando os que estão no topo da lista).
                     $extra = $std->diff($aprov)->take($k);
                     $aprov = $aprov->merge($extra); // os alunos que ocuparam essas novas vagas são adicionados no array principal dos aprovados.
                 }
             }
-            $classificaveis = $std->diff($aprov); 
+            $classificaveis = $std->diff($aprov);
 
             DB::transaction(function () use ($aprov, $classificaveis, $processo_id) {
                 foreach ($aprov as $student) {
@@ -101,7 +142,7 @@ class ResultController extends Controller {
                         'is_classified' => 1, // flag (1 = aprovado, 0 = classificável)
                         'origin' => $student->origem,
                         'course_id' => $student->curso_id
-                    ]);                    
+                    ]);
                 }
 
                 foreach ($classificaveis as $s) {
@@ -118,37 +159,38 @@ class ResultController extends Controller {
     }
 
     public function gerarPdf(Request $req) {
-        $ano = $req->input('ano');
-        $cursos = collect(unserialize(gzuncompress(base64_decode($req->input('cursos')))));
-        $publica = collect(unserialize(gzuncompress(base64_decode($req->input('publica')))));
-        $particular = collect(unserialize(gzuncompress(base64_decode($req->input('particular')))));
-        $pub_classfv = collect(unserialize(gzuncompress(base64_decode($req->input('publicaClassificaveis')))));
-        $priv_classfv = collect(unserialize(gzuncompress(base64_decode($req->input('particularClassificaveis')))));
+        $ano = $req->ano;
+        $token = $req->token;
+        $data = Cache::get("resultado_{$token}");
+        
+        if(!$data) abort(404, 'Dados expirados. Recarregue a página.');
 
         $categorias = [
             'PCD',
             'PUBLICA-AMPLA',
             'PUBLICA-PROX-EEEP',
             'PRIVATE-AMPLA',
-            'PRIVATE-PROX-EEEP',
+            'PRIVATE-PROX-EEEP'
         ];
-    
+
+        $cursos = $data['cursos'];
+        $publica = $data['publica'];
+        $particular = $data['particular'];
+        $pub_classfv = $data['publicaClassificaveis'];
+        $priv_classfv = $data['particularClassificaveis'];
+
         $classificados = [];
 
         foreach ($cursos as $curso) {
             $cursoId = $curso->id;
-    
+
             foreach ($categorias as $cat) {
-                $classificados[$cursoId][$cat] = collect();
-    
-                if ($cat === 'PCD') {
-                    $classificados[$cursoId][$cat] = 
-                        ($publica[$cursoId][$cat] ?? collect())->merge($particular[$cursoId][$cat] ?? collect());
-                } elseif (str_starts_with($cat, 'PUBLICA')) {
-                    $classificados[$cursoId][$cat] = $publica[$cursoId][$cat] ?? collect();
-                } elseif (str_starts_with($cat, 'PRIVATE')) {
-                    $classificados[$cursoId][$cat] = $particular[$cursoId][$cat] ?? collect();
-                }
+                $classificados[$cursoId][$cat] = match (true) {
+                    $cat === 'PCD' => collect($publica[$cursoId]['PCD'] ?? [])->merge($particular[$cursoId]['PCD'] ?? []),
+                    str_starts_with($cat, 'PUBLICA') => collect($publica[$cursoId][$cat] ?? []),
+                    str_starts_with($cat, 'PRIVATE') => collect($particular[$cursoId][$cat] ?? []),
+                    default => collect()
+                };
             }
         }
 

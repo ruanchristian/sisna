@@ -124,12 +124,7 @@
     <form id="formpdf" method="POST" action="{{ route('resultado.pdf') }}">
         @csrf
         <input type="hidden" name="ano" value="{{ $ano }}">
-        <input type="hidden" name="cursos" value="{{ base64_encode(gzcompress(serialize($cursos))) }}">
-        <input type="hidden" name="publica" value="{{ base64_encode(gzcompress(serialize($publica))) }}">
-        <input type="hidden" name="particular" value="{{ base64_encode(gzcompress(serialize($particular))) }}">
-        <input type="hidden" name="publicaClassificaveis" value="{{ base64_encode(gzcompress(serialize($publicaClassificaveis))) }}">
-        <input type="hidden" name="particularClassificaveis"
-            value="{{ base64_encode(gzcompress(serialize($particularClassificaveis))) }}">
+        <input type="hidden" name="token" value="{{ $token }}">
         <input type="hidden" name="editall">
         <input type="hidden" name="resultado">
         <input type="hidden" name="day">
