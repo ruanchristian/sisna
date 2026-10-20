@@ -13,6 +13,39 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ResultController extends Controller {
+
+    private const PUBLIC_ORIGINS = [
+        'PCD',
+        'PUBLICA-AMPLA',
+        'PUBLICA-PROX-EEEP',
+    ];
+
+    private const PRIVATE_ORIGINS = [
+        'PRIVATE-AMPLA',
+        'PRIVATE-PROX-EEEP',
+    ];
+
+    private const ALL_ORIGINS = [
+        'PCD',
+        'PUBLICA-AMPLA',
+        'PUBLICA-PROX-EEEP',
+        'PRIVATE-AMPLA',
+        'PRIVATE-PROX-EEEP',
+    ];
+
+    private const DEFAULT_TIEBREAK = [
+        'media_final' => 'DESC',
+        'data_nascimento' => 'ASC',
+        'media_pt' => 'DESC',
+        'media_mt' => 'DESC',
+    ];
+
+    private const ALLOWED_TIEBREAK_COLUMNS = [
+        'media_final',
+        'data_nascimento',
+        'media_pt',
+        'media_mt',
+    ];
     
     public function index(int $id) {
         $process = SelectiveProcess::with(['results.student' ])->findOrFail($id);
@@ -22,35 +55,23 @@ class ResultController extends Controller {
 
         // CLASSIFICADOS — PÚBLICA
         $publica = $r->where('is_classified', 1)
-            ->filter(fn($aluno) => in_array($aluno->origin, [
-                'PCD',
-                'PUBLICA-AMPLA',
-                'PUBLICA-PROX-EEEP'
-            ]))
+            ->filter(fn($aluno) => in_array($aluno->origin, self::PUBLIC_ORIGINS, true))
             ->groupBy('course_id')->map(fn($g) => $g->groupBy('origin'));
 
         // CLASSIFICADOS — PARTICULAR
         $particular = $r->where('is_classified', 1)
-            ->filter(fn($aluno) => in_array($aluno->origin, [
-                'PRIVATE-AMPLA',
-                'PRIVATE-PROX-EEEP'
-            ]))
+            ->filter(fn($aluno) => in_array($aluno->origin, self::PRIVATE_ORIGINS, true))
             ->groupBy('course_id')->map(fn($g) => $g->groupBy('origin'));
 
         // CLASSIFICÁVEIS — PÚBLICA
         $publicaClassificaveis = $r->where('is_classified', 0)
-            ->filter(fn($aluno) => in_array($aluno->origin, [
-                'PCD',
-                'PUBLICA-AMPLA',
-                'PUBLICA-PROX-EEEP'
-            ]))->groupBy('course_id');
+            ->filter(fn($aluno) => in_array($aluno->origin, self::PUBLIC_ORIGINS, true))
+            ->groupBy('course_id');
 
         // CLASSIFICÁVEIS — PARTICULAR
         $particularClassificaveis = $r->where('is_classified', 0)
-            ->filter(fn($aluno) => in_array($aluno->origin, [
-                'PRIVATE-AMPLA',
-                'PRIVATE-PROX-EEEP'
-            ]))->groupBy('course_id');
+            ->filter(fn($aluno) => in_array($aluno->origin, self::PRIVATE_ORIGINS, true))
+            ->groupBy('course_id');
 
         $token = Str::uuid()->toString();
 
@@ -77,10 +98,14 @@ class ResultController extends Controller {
 
     public function rsa($processo_id) {
         $process = SelectiveProcess::findOrFail($processo_id);
-        $courses = explode('-', $process->cursos); // "1-2-3-4" -> [1,2,3,4]
+        $courses = collect(explode('-', $process->cursos))
+            ->map(fn($id) => (int) $id)
+            ->filter(fn($id) => $id > 0)
+            ->values(); // "1-2-3-4" -> [1,2,3,4]
 
         $config = $process->config;
-        $desempate = json_decode($config->ordem_desempate, true);
+        $desempate = json_decode($config->ordem_desempate, true) ?: self::DEFAULT_TIEBREAK;
+        $orderBy = $this->buildOrderByClause($desempate);
 
         $origens = [
             'PCD' => $config->vagas_pcd,
@@ -91,7 +116,7 @@ class ResultController extends Controller {
         ];
         foreach ($courses as $id_curso) {
             $std = $process->students()->where('curso_id', $id_curso)
-                ->orderByRaw(implode(',', array_map(fn($cat, $ord) => "$cat $ord", array_keys($desempate), $desempate)))
+                ->orderByRaw($orderBy)
                 ->get();
             // std contém tds os alunos do curso ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
 
@@ -134,25 +159,29 @@ class ResultController extends Controller {
             }
             $classificaveis = $std->diff($aprov);
 
-            DB::transaction(function () use ($aprov, $classificaveis, $processo_id) {
-                foreach ($aprov as $student) {
-                    Result::insert([
-                        'student_id' => $student->id,
-                        'process_id' => $processo_id,
-                        'is_classified' => 1, // flag (1 = aprovado, 0 = classificável)
-                        'origin' => $student->origem,
-                        'course_id' => $student->curso_id
-                    ]);
+            $aprovRows = $aprov->map(fn($student) => [
+                'student_id' => $student->id,
+                'process_id' => $processo_id,
+                'is_classified' => 1,
+                'origin' => $student->origem,
+                'course_id' => $student->curso_id,
+            ])->values()->all();
+
+            $classificaveisRows = $classificaveis->map(fn($s) => [
+                'student_id' => $s->id,
+                'process_id' => $processo_id,
+                'is_classified' => 0,
+                'origin' => $s->origem,
+                'course_id' => $s->curso_id,
+            ])->values()->all();
+
+            DB::transaction(function () use ($aprovRows, $classificaveisRows) {
+                if (!empty($aprovRows)) {
+                    Result::insert($aprovRows);
                 }
 
-                foreach ($classificaveis as $s) {
-                    Result::insert([
-                        'student_id' => $s->id,
-                        'process_id' => $processo_id,
-                        'is_classified' => 0,
-                        'origin' => $s->origem,
-                        'course_id' => $s->curso_id
-                    ]);
+                if (!empty($classificaveisRows)) {
+                    Result::insert($classificaveisRows);
                 }
             });
         }
@@ -165,13 +194,7 @@ class ResultController extends Controller {
         
         if(!$data) abort(404, 'Dados expirados. Recarregue a página.');
 
-        $categorias = [
-            'PCD',
-            'PUBLICA-AMPLA',
-            'PUBLICA-PROX-EEEP',
-            'PRIVATE-AMPLA',
-            'PRIVATE-PROX-EEEP'
-        ];
+        $categorias = self::ALL_ORIGINS;
 
         $cursos = $data['cursos'];
         $publica = $data['publica'];
@@ -208,5 +231,26 @@ class ResultController extends Controller {
         ])->setPaper('a4', 'portrait');
 
         return $pdf_final->download("Resultado-EEEP-DR-JOSÉ-ALVES-DA-SILVEIRA {$ano}.pdf");
+    }
+
+    private function buildOrderByClause(array $desempate): string {
+        $order = [];
+
+        foreach ($desempate as $column => $direction) {
+            if (!in_array($column, self::ALLOWED_TIEBREAK_COLUMNS, true)) {
+                continue;
+            }
+
+            $dir = strtoupper((string) $direction);
+            $order[] = $column . ' ' . ($dir === 'ASC' ? 'ASC' : 'DESC');
+        }
+
+        if (empty($order)) {
+            foreach (self::DEFAULT_TIEBREAK as $column => $direction) {
+                $order[] = $column . ' ' . $direction;
+            }
+        }
+
+        return implode(',', $order);
     }
 }

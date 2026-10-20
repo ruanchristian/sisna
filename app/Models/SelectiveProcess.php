@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-class SelectiveProcess extends Model {
-    use HasFactory;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
+
+class SelectiveProcess extends Model implements AuditableContract {
+    use HasFactory, Auditable;
 
     public $timestamps = false;
     protected $fillable = ['ano', 'estado', 'cursos'];

@@ -40,7 +40,6 @@ class SelectiveProcessController extends Controller {
         if ($request->estado == 0) {
             // calcula o resultado novamente...
             Result::where('process_id', $id)->delete();
-            DB::statement("ALTER TABLE results AUTO_INCREMENT = 1");
             $result = new ResultController();
             $result->rsa($id);
         }

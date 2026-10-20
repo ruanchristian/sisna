@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Result\ResultController;
+use App\Http\Controllers\Audit\AuditController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\SpecialConfig\SpecialConfigController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false]);
 
@@ -14,7 +16,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'can:isAdmin, \\App\\Models\\User'], function() {
 
     Route::controller(ResultController::class)->prefix('results')->group(function() {
         Route::name('resultado.')->group(function() {
@@ -46,13 +50,17 @@ Route::group(['middleware' => 'can:isAdmin, \App\Models\User'], function() {
             Route::put('/save-order/{process}', 'update')->name('update');
         });     
     });
+
+    Route::controller(AuditController::class)->prefix('audits')->group(function () {
+        Route::get('/', 'index')->name('audit.index');
+    });
 });
 
 Route::controller(UserController::class)->middleware('auth')->prefix('users')->group(function () {
     Route::name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
 
-        Route::middleware('can:isAdmin, App\Models\User')->group(function () {
+        Route::middleware('can:isAdmin, \\App\\Models\\User')->group(function () {
             Route::get('/create', 'create')->name('create');
             Route::post('/create', 'store')->name('store');
             Route::post('/checkpass', 'checkPassword');
@@ -65,7 +73,7 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
 
 Route::controller(StudentController::class)->middleware('auth')->prefix('students')->group(function () {
     Route::name('student.')->group(function () {
-        Route::middleware('can:isAdmin, App\Models\User')->group(function() {
+        Route::middleware('can:isAdmin, \\App\\Models\\User')->group(function() {
             Route::get('/lotes/{id}', 'lotes')->name('lotes');
         });
 
@@ -76,6 +84,3 @@ Route::controller(StudentController::class)->middleware('auth')->prefix('student
         Route::put('/update/{student}', 'update')->name('update');
     });
 });
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Auth::routes();

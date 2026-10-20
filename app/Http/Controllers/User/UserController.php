@@ -43,8 +43,12 @@ class UserController extends Controller {
     }
 
     public function destroy(int $id) {
+        if($id === 1) {
+            return response('Não é possível excluir esse usuário!', 404);
+        }
+
         if (Auth::user()->id === $id || !$user = User::find($id)) {
-            return response(null, 404);
+            return response('Erro ao excluir esse user.', 404);
         }
         $user->destroy($id);
 

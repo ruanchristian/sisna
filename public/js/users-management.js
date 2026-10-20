@@ -55,8 +55,8 @@ $(document).on('click', '.delete-user', function() {
                 }).then(() => {
                     location.reload();
                 })
-            }).fail(() => {
-                Swal.fire('Erro', 'Erro ao excluir esse user.', 'error');
+            }).fail((resp) => {
+                Swal.fire('Erro', resp.responseText, 'error');
             });
          }
       });

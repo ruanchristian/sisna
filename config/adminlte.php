@@ -280,6 +280,14 @@ return [
                 ]
             ],
         ],
+
+        ['header' => 'Auditoria'],
+        [
+            'text' => 'Registros de auditoria',
+            'icon' => 'fas fa-shield-halved',
+            'can' => 'isAdmin',
+            'url' => 'audits'
+        ],
     ],
 
     /*
