@@ -2,8 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Models\SelectiveProcess;
-use App\Models\User;
 use App\Notifications\AuditTelegramNotification;
 use Illuminate\Support\Facades\Notification;
 use OwenIt\Auditing\Events\Audited;
@@ -11,9 +9,9 @@ use OwenIt\Auditing\Events\Audited;
 class SendTelegramAuditNotification {
 
     public function handle(Audited $event): void {
-        $audit = $event->audit;
+        $chatId = env('TELEGRAM_CHAT_ID');
 
-        $user = new User;
-        Notification::send($user, new AuditTelegramNotification($audit));
+        Notification::route('telegram', $chatId)
+                ->notify(new AuditTelegramNotification($event->audit));
     }
 }

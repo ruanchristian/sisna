@@ -116,7 +116,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            {{ $audits->links() }}
+            {{ $audits->links('pagination::bootstrap-4') }}
         </div>
     </div>
 @stop

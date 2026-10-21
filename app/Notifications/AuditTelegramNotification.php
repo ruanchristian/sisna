@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramMessage;
 use OwenIt\Auditing\Contracts\Audit;
 
-class AuditTelegramNotification extends Notification {
+class AuditTelegramNotification extends Notification implements ShouldQueue {
     use Queueable;
 
     public function __construct(public Audit $audit) {}
@@ -54,7 +55,6 @@ class AuditTelegramNotification extends Notification {
         );
 
         return TelegramMessage::create($message)
-            ->to(env('TELEGRAM_CHAT_ID'))
             ->options(['parse_mode' => 'HTML']);
     }
 }

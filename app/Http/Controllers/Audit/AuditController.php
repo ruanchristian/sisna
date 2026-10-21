@@ -11,7 +11,7 @@ class AuditController extends Controller
     {
         $audits = Audit::with(['user', 'auditable'])
             ->latest('created_at')
-            ->paginate(15);
+            ->paginate(10);
 
         return view('audit.index', compact('audits'));
     }
