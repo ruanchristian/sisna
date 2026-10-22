@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Result\ResultController;
 use App\Http\Controllers\Audit\AuditController;
+use App\Http\Controllers\Changelog\ChangelogController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\SelectiveProcess\SelectiveProcessController;
 use App\Http\Controllers\SpecialConfig\SpecialConfigController;
@@ -18,7 +19,7 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'can:isAdmin, \\App\\Models\\User'], function() {
+Route::group(['middleware' => 'can:isAdmin, App\\Models\\User'], function() {
 
     Route::controller(ResultController::class)->prefix('results')->group(function() {
         Route::name('resultado.')->group(function() {
@@ -44,6 +45,16 @@ Route::group(['middleware' => 'can:isAdmin, \\App\\Models\\User'], function() {
         });
     });
 
+    Route::controller(ChangelogController::class)->prefix('changelog')->group(function () {
+        Route::name('changelog.')->group(function () {
+            Route::get('/create', 'create')->name('create');
+            Route::post('/create', 'store')->name('store');
+            Route::get('/edit/{changelog}', 'edit')->name('edit');
+            Route::put('/edit/{changelog}', 'update')->name('update');
+            Route::delete('/delete/{changelog}', 'destroy')->name('destroy');
+        });
+    });
+
     Route::controller(SpecialConfigController::class)->prefix('special-configs')->group(function () {
         Route::name('configs.')->group(function() {
             Route::get('/{id}', 'index')->name('index');
@@ -56,11 +67,18 @@ Route::group(['middleware' => 'can:isAdmin, \\App\\Models\\User'], function() {
     });
 });
 
+Route::middleware('auth')->prefix('changelog')->name('changelog.')->group(function () {
+    Route::get('/', [ChangelogController::class, 'index'])->name('index');
+    Route::get('/{changelog}', [ChangelogController::class, 'show'])
+        ->whereNumber('changelog')
+        ->name('show');
+});
+
 Route::controller(UserController::class)->middleware('auth')->prefix('users')->group(function () {
     Route::name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
 
-        Route::middleware('can:isAdmin, \\App\\Models\\User')->group(function () {
+        Route::middleware('can:isAdmin, App\\Models\\User')->group(function () {
             Route::get('/create', 'create')->name('create');
             Route::post('/create', 'store')->name('store');
             Route::post('/checkpass', 'checkPassword');
@@ -73,7 +91,7 @@ Route::controller(UserController::class)->middleware('auth')->prefix('users')->g
 
 Route::controller(StudentController::class)->middleware('auth')->prefix('students')->group(function () {
     Route::name('student.')->group(function () {
-        Route::middleware('can:isAdmin, \\App\\Models\\User')->group(function() {
+        Route::middleware('can:isAdmin, App\\Models\\User')->group(function() {
             Route::get('/lotes/{id}', 'lotes')->name('lotes');
         });
 

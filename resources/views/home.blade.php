@@ -128,6 +128,8 @@
         @endcannot
 
         {{-- ========== INDICADORES ========== --}}
+       @can('isAdmin', Auth::user())
+        
         <div class="row">
             <div class="col-lg col-md-4 col-sm-6">
                 <div class="info-box">
@@ -303,6 +305,7 @@
                 </div>
             </div>
         </div>
+        @endcan 
     </div>
 @stop
 

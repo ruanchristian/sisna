@@ -281,7 +281,10 @@ return [
             ],
         ],
 
-        ['header' => 'Auditoria'],
+        [
+            'header' => 'Auditoria',
+            'can' => 'isAdmin'
+        ],
         [
             'text' => 'Registros de auditoria',
             'icon' => 'fas fa-shield-halved',
@@ -342,6 +345,16 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'Novidades' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type'     => 'css',
+                    'asset'    => true,
+                    'location' => 'css/badge-update.css',
                 ],
             ],
         ],
