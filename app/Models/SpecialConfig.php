@@ -12,6 +12,10 @@ class SpecialConfig extends Model implements AuditableContract {
 
     public $timestamps = false;
 
+    protected $casts = [
+        'redistribuicao' => 'array',
+    ];
+
     protected $fillable = [
         'vagas_pcd',
         'vagas_publica_ampla',
@@ -19,6 +23,7 @@ class SpecialConfig extends Model implements AuditableContract {
         'vagas_private_ampla',
         'vagas_private_prox',
         'ordem_desempate',
+        'redistribuicao',
         'processo_id'
     ];
 

@@ -100,5 +100,6 @@ Route::controller(StudentController::class)->middleware('auth')->prefix('student
         Route::get('/edit/{process}/{student}', 'edit')->name('edit');
         Route::post('/create/{process}', 'store')->name('create');
         Route::put('/update/{student}', 'update')->name('update');
+        Route::get('/ficha/{student}', 'ficha')->name('ficha');
     });
 });

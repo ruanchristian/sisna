@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\SelectiveProcess;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller {
     
@@ -61,10 +62,30 @@ class StudentController extends Controller {
     public function store(StudentRequest $request, SelectiveProcess $process) {
         $data = $request->validated();
         $data['nome'] = mb_strtoupper($request->nome);
+        $data['inscrito_por'] = auth()->id();
 
-        $process->students()->create($data);
+        // Trava o processo para que dois atendentes não peguem o mesmo nº de inscrição.
+        $student = DB::transaction(function () use ($process, $data) {
+            SelectiveProcess::whereKey($process->id)->lockForUpdate()->first();
+            $data['numero_inscricao'] = ($process->students()->max('numero_inscricao') ?? 0) + 1;
 
-        return back()->with('success', 'Participante cadastrado com sucesso.');
+            return $process->students()->create($data);
+        });
+
+        return back()
+            ->with('success', "Participante cadastrado com sucesso.<br>Nº de inscrição: <b>{$student->numero_inscricao}</b>")
+            ->with('ficha_url', route('student.ficha', $student->id));
+    }
+
+    public function ficha(Student $student) {
+        $student->load(['process', 'course', 'inscritoPor']);
+
+        $courses = collect(explode('-', $student->process->cursos))
+            ->map(fn ($id) => Course::find($id))
+            ->filter()
+            ->values();
+
+        return view('students.ficha', compact('student', 'courses'));
     }
 
     public function update(StudentRequest $request, Student $student) {

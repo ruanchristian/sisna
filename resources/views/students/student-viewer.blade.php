@@ -43,7 +43,7 @@
                         <tbody>
                             @foreach ($students as $student)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $student->numero_inscricao ?? $loop->iteration }}</td>
                                     <td>{{ $student->nome }}</td>
                                     <td>{{ $student->course->nome }}</td>
                                     <td>{{ date('d/m/Y', strtotime($student->data_nascimento)) }}</td>
@@ -55,6 +55,12 @@
                                             <button title="Editar {{ $student->nome }}"
                                                 class="btn btn-xs btn-default text-primary mx-1 mb-1 shadow">
                                                 <i class="fas fa-lg fa-fw fa-pen"></i>
+                                            </button></a>
+
+                                        <a href="{{ route('student.ficha', $student->id) }}" target="_blank">
+                                            <button title="Imprimir ficha de {{ $student->nome }}"
+                                                class="btn btn-xs btn-default text-secondary mx-1 mb-1 shadow">
+                                                <i class="fas fa-lg fa-fw fa-print"></i>
                                             </button></a>
 
                                         {{-- <button title="Deletar {{ $student->nome }}"

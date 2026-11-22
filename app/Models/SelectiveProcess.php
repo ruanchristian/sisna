@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Selection\RedistributionGraph;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use OwenIt\Auditing\Auditable;
 
@@ -22,7 +23,8 @@ class SelectiveProcess extends Model implements AuditableContract {
                     ['media_final' => 'DESC', 
                     'data_nascimento' => 'ASC',
                     'media_pt' => 'DESC', 
-                    'media_mt' => 'DESC'], true)
+                    'media_mt' => 'DESC'], true),
+                'redistribuicao' => RedistributionGraph::DEFAULT_EDGES,
             ]);
         });
     }

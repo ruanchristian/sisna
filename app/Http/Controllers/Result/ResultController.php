@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Result;
 use App\Models\SelectiveProcess;
+use App\Services\Selection\RedistributionGraph;
+use App\Services\Selection\VacancyAllocator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -114,49 +116,17 @@ class ResultController extends Controller {
             'PUBLICA-PROX-EEEP' => $config->vagas_publica_prox,
             'PRIVATE-PROX-EEEP' => $config->vagas_private_prox,
         ];
+        $allocator = new VacancyAllocator(RedistributionGraph::fromConfig($config->redistribuicao));
+
         foreach ($courses as $id_curso) {
             $std = $process->students()->where('curso_id', $id_curso)
                 ->orderByRaw($orderBy)
                 ->get();
             // std contém tds os alunos do curso ordenados com base nos critérios de desempate (media_final DESC, data_nasc ASC e etc...)
 
-            $aprov = collect(); // array que vai armazenar os alunos aprovados de cada curso
-            $auxiliar = $origens; // array auxiliar que controla a qtd de vagas sobrando de cada categoria. [categoria => vagas_sobrando]
+            // Alocação por categoria + redistribuição das vagas remanescentes via grafo configurável
+            $aprov = $allocator->allocate($std, $origens);
 
-            // Alocação dos alunos aprovados nas suas respectivas categorias com base na qtd de vagas disponíveis
-            // (PCD, PUBLICA AMPLA, RESIDENTES PUB, RESIDENTES PRIV...)
-            foreach ($origens as $origem => $vagas) {
-                $selected = $std->where('origem', $origem)->take($vagas);
-                $aprov = $aprov->merge($selected);
-                $auxiliar[$origem] -= $selected->count();
-            }
-
-            // Distribuir vagas remanescentes (caso existam)
-            foreach ($auxiliar as $origem => $k) {
-                if ($k > 0) { // se houver vagas não preenchidas...
-                    if ($origem === 'PCD') {
-                        // 3.3 Se as vagas para estudantes com deficiência não forem preenchidas, as que sobrarem serão ocupadas
-                        // por estudantes de escola pública, seguindo a ordem de classificação geral
-
-                        // primeiro busca nos residentes próximos da escola pública
-                        $publica_prox = $std->where('origem', 'PUBLICA-PROX-EEEP')->diff($aprov)->take($k);
-                        $aprov = $aprov->merge($publica_prox);
-                        $k -= $publica_prox->count();
-
-                        // se ainda assim sobrar vagas, vai buscar na ampla da escola pública
-                        if ($k > 0) {
-                            $publica_ampla = $std->where('origem', 'PUBLICA-AMPLA')->diff($aprov)->take($k);
-                            $aprov = $aprov->merge($publica_ampla);
-                            $k -= $publica_ampla->count();
-                        }
-                        continue;
-                    }
-
-                    // Seleciona os k primeiros alunos disponíveis que ainda não tinham sido aprovados (priorizando os que estão no topo da lista).
-                    $extra = $std->diff($aprov)->take($k);
-                    $aprov = $aprov->merge($extra); // os alunos que ocuparam essas novas vagas são adicionados no array principal dos aprovados.
-                }
-            }
             $classificaveis = $std->diff($aprov);
 
             $aprovRows = $aprov->map(fn($student) => [
